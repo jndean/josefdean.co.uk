@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <title>Josef Dean</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="clippy.css" media="all">
+    <meta charset="UTF-8">
+    <link rel="icon" href="favicon.ico">
+  </head>
+  <body>
+
+  	<div class="screen_position">
+  	<div class="screen">
+    	<input autocomplete="off" id="inputField" type="text" autofocus>
+    	<span class="scanlines"></span>
+    	<span class="scanline"></span>
+
+		<div class="screenContent">	
+
+			<div id="loginPage">
+				<pre id="splashScreen"></pre>
+				<pre><span id="loginText"></span><span id="loginInput"></span></pre>
+			</div>
+
+			<div id="deniedPage" style="display: none;">
+				<center><pre id="deniedPopup"></pre></center>
+			</div>
+
+			<div id="hackingPage" style="display: none;">
+				<pre><span id="hackingForgroundBox"></span><span id="hackingCursor">█</span></pre>
+			</div>
+
+			<div id="siteMap" stype="visible: hidden">
+
+			</div>			
+
+
+		</div>
+
+	</div>
+  	</div>
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="clippy.min.js"></script>
+    <script src="utilities.js"></script>
+    <script src="words.js"></script>
+    <script src="hacking.js"></script>
+    <script src="login.js"></script>
+  </body>
+</html>

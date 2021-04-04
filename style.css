@@ -1,0 +1,184 @@
+
+
+body {
+  margin: 0;
+  padding-top: 5vh;
+  padding-left: 5vw;
+  padding-right: 5vw;
+  overflow: hidden;
+  background-color: black;
+  /*cursor: none;*/
+
+  -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+          user-select: none; 
+}
+
+.screen_position {
+  margin: auto;
+
+  width: 150vw;
+  height: 90vw;
+  max-width: 150vh;
+  max-height: 90vh;
+}
+.screen {
+  position: relative;
+  background-color: black;
+  background-image: radial-gradient(
+    rgba(0, 75, 35, 1), black 150%
+  );
+
+  height: 100%;
+  width: 100%;
+
+  border-radius: 3vw;
+  transform: skewY(0deg);
+
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  color: #44ff44;
+  font: 20px Inconsolata, monospace;
+  text-shadow: -2px 0 0px #aa0000, 2px 0 0px #0000aa;
+  animation: screenFlicker 0.05s linear infinite;
+}
+@keyframes screenFlicker { 
+   00% { opacity: 1.0;}  10% { opacity: 0.95; }  
+   20% { opacity: 1.0;}  30% { opacity: 0.95; }  
+   40% { opacity: 1.0;}  50% { opacity: 0.95; }  
+   60% { opacity: 1.0;}  70% { opacity: 0.95; }  
+   80% { opacity: 1.0;}  90% { opacity: 0.95; }  
+}
+
+.scanlines {
+  position: absolute;
+  pointer-events: none;
+
+  box-sizing: border-box; 
+  width: 100%;
+  height: 100%;
+
+  z-index: 5;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  background-size: 100% 4px, 3px 100%;
+}
+.scanline {
+  position:absolute;
+  pointer-events: none;
+  top:0%;
+  width: 100%;
+  height: 2px;
+  z-index: 10;
+  background: rgba(0, 0, 0, .3);
+  opacity: 0.5;
+  animation: scanline 6s linear infinite;
+}
+@keyframes scanline {
+  0% {
+    top:99%;
+  }
+}
+
+
+.screenContent {
+  position:absolute;
+  width: 95%;
+  top: 0;
+  max-height: 100%;
+  height: 100%;
+  padding: 3%;
+  animation: screen-skew 4s infinite;
+}
+
+@keyframes fadeIn {
+  0% {background-color: #444444;}
+  100% {opacity:1;}
+}
+@keyframes screen-skew {
+  20% {transform: skew(0deg, 0deg); filter: blur(0);}
+  20.5% {transform: skew(-5deg, 0deg); filter: blur(4px);} 
+  21% {transform: skew(-20deg, 0deg) translateX(0px);}
+  21.5% {transform: skew(0deg, 0deg) translateX(-40px);}
+  22% {transform: skew(0deg, 0deg) translateX(0px); filter: blur(0);}
+}
+
+
+#splashScreen {
+  text-align: center;
+  padding-top: 20vh;
+}
+
+#inputField {
+  position: absolute;
+  color: rgba(0,0,0,0,);
+  background: transparent;
+  border: rgba(0,0,0,0);
+  width: 0px;
+  transform: translateY(-9999px);
+}
+
+
+body{
+  background:black;
+  font-family: 'Varela', sans-serif;
+}
+
+
+
+.glitch{
+  color:white;
+  font-size:100px;
+  position:relative;
+  width:400px;
+  margin:0 auto;
+}
+@keyframes noise-anim{
+    10% { clip:rect(40px,9999px,10px,0);}
+    20% { clip:rect(60px,9999px,0px,0);}
+    30% { clip:rect(90px,9999px,90px,0);}
+    40% { clip:rect(66px,9999px,196px,0);}
+    50% { clip:rect(23px,9999px,51px,0);}
+}
+.glitch:after{
+  content:attr(data-text);
+  position:absolute;
+  left:2px;
+  text-shadow:-1px 0 red;
+  top:0;
+  color:white;
+  background:black;
+  overflow:hidden;
+  clip:rect(0,900px,0,0); 
+  animation:noise-anim 2s infinite linear alternate-reverse;
+}
+
+@keyframes noise-anim-2{
+  $steps:20;
+  @for $i from 0 through $steps{
+    #{percentage($i*(1/$steps))}{
+      clip:rect(random(100)+px,9999px,random(100)+px,0);
+    }
+  }
+}
+.glitch:before{
+  content:attr(data-text);
+  position:absolute;
+  left:-2px;
+  text-shadow:1px 0 blue; 
+  top:0;
+  color:white;
+  background:black;
+  overflow:hidden;
+  clip:rect(0,900px,0,0); 
+  animation:noise-anim-2 3s infinite linear alternate-reverse;
+}
+
+.transistionFrame{
+  position: absolute;
+  clip: rect(200px, 800px, 1000px, 0px);
+  transform: skewX(20deg) translate(100px, 50px);
+  filter: blur(1px);
+  text-shadow: -5px 0 #ff000099 10px 0 #0000ff99;
+}
