@@ -120,61 +120,6 @@ body {
 }
 
 
-body{
-  background:black;
-  font-family: 'Varela', sans-serif;
-}
-
-
-
-.glitch{
-  color:white;
-  font-size:100px;
-  position:relative;
-  width:400px;
-  margin:0 auto;
-}
-@keyframes noise-anim{
-    10% { clip:rect(40px,9999px,10px,0);}
-    20% { clip:rect(60px,9999px,0px,0);}
-    30% { clip:rect(90px,9999px,90px,0);}
-    40% { clip:rect(66px,9999px,196px,0);}
-    50% { clip:rect(23px,9999px,51px,0);}
-}
-.glitch:after{
-  content:attr(data-text);
-  position:absolute;
-  left:2px;
-  text-shadow:-1px 0 red;
-  top:0;
-  color:white;
-  background:black;
-  overflow:hidden;
-  clip:rect(0,900px,0,0); 
-  animation:noise-anim 2s infinite linear alternate-reverse;
-}
-
-@keyframes noise-anim-2{
-  $steps:20;
-  @for $i from 0 through $steps{
-    #{percentage($i*(1/$steps))}{
-      clip:rect(random(100)+px,9999px,random(100)+px,0);
-    }
-  }
-}
-.glitch:before{
-  content:attr(data-text);
-  position:absolute;
-  left:-2px;
-  text-shadow:1px 0 blue; 
-  top:0;
-  color:white;
-  background:black;
-  overflow:hidden;
-  clip:rect(0,900px,0,0); 
-  animation:noise-anim-2 3s infinite linear alternate-reverse;
-}
-
 .transistionFrame{
   position: absolute;
   clip: rect(200px, 800px, 1000px, 0px);
@@ -182,3 +127,32 @@ body{
   filter: blur(1px);
   text-shadow: -5px 0 #ff000099 10px 0 #0000ff99;
 }
+
+
+#deniedPopup{
+  color: red;
+}
+
+#hackingPage {
+  position: relative;
+}
+
+.hackingBackground {
+  position: absolute;
+  opacity: 0.1;
+  margin: 0;
+  font: 15px Inconsolata, monospace;
+  width: 48%;
+  overflow: hidden;
+}
+
+#hackingBackgroundRHS {
+  left: 52%;
+  opacity: 0.25;
+}
+
+
+#hackingForeground {
+  position: absolute;
+}
+

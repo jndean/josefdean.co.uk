@@ -9,7 +9,7 @@
   <body>
 
   	<div class="screen_position">
-  	<div class="screen">
+  	<div class="screen" id="screenRectangle">
     	<input autocomplete="off" id="inputField" type="text" autofocus>
     	<span class="scanlines"></span>
     	<span class="scanline"></span>
@@ -26,7 +26,9 @@
 			</div>
 
 			<div id="hackingPage" style="display: none;">
-				<pre><span id="hackingForgroundBox"></span><span id="hackingCursor">█</span></pre>
+				<pre class="hackingbackground" id="hackingBackgroundLHS"></pre>
+				<pre class="hackingbackground" id="hackingBackgroundRHS"></pre>
+				<pre id="hackingForeground"><span id="hackingForegroundBox"></span><span id="hackingCursor" style="display: none">█</span></pre>
 			</div>
 
 			<div id="siteMap" stype="visible: hidden">
