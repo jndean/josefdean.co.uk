@@ -112,8 +112,8 @@ function close_denied_page() {
 	        agent.parentNode.removeChild(agent);	
 	        agent = null;
 
-    	    deniedPage.classList.add("transistionFrame");
-	        setTimeout(hacking_intro, 50);
-	    }, 400);
+	    	deniedPage.classList.add("transistionFrame");
+	        setTimeout(hacking_intro, 80);
+	    }, 200);
 	}, 2000)
 }

