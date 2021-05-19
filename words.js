@@ -97,7 +97,25 @@ Rootkit failure: too many firewalls!\n\
      return RUN\n\
   }\n\
  > Compiling exploit...\n\
-This website is still under construction, there is no more content :("
+This website is still under construction, there is no more content :(";
+
+
+const hacking_verbs = [
+    'Ready',
+    'Downloading',
+    'Cross-compiling',
+    'Bootstraping',
+    'Side-loading',
+    'Virtualising',
+    'Injecting',
+    'Emulating',
+    'Escalating',
+    'Uploading',
+    'Spoofing',
+    'Apologising',
+    'Satirising',
+    'Regenerating',
+];
 
 
 var LHS_hacking_content_text = "\

@@ -34,6 +34,8 @@ function hacking_intro() {
 function hacking_main() {
 	document.body.addEventListener("keydown", hacking_keydown);
 
+    step_hacking_progress_bar(0);
+
 	hacking_cursor_interval = setInterval(() => {
 		hacking_cursor_state = !hacking_cursor_state;
 		if (hacking_cursor_state) hacking_cursor.style.display = "block";
@@ -50,6 +52,7 @@ function hacking_keydown(e) {
 	step_hacking_foreground(progress);
 	step_hacking_background_LHS(progress);
 	step_hacking_background_RHS(progress);
+	step_hacking_progress_bar(progress);
 	step_hacking_style(progress);
 
 	if (hacking_cursor_interval != null) {
@@ -62,7 +65,7 @@ function hacking_keydown(e) {
 var hacking_foreground_pos = 0;
 var hacking_foreground_content = hacking_startup_text_1 + hacking_startup_text_2;
 function step_hacking_foreground(progress) {
-	var step = Math.round(5 + 20 * progress * Math.random());
+	var step = Math.round(5 + 30 * progress * Math.random());
 	hacking_foreground_content += hacking_main_text.slice(hacking_foreground_pos, hacking_foreground_pos + step);
 	hacking_foreground_pos += step;
 
@@ -92,13 +95,14 @@ function step_hacking_background_RHS(progress) {
 	hackingBackgroundRHS.innerHTML = hacking_background_RHS_content + '█';
 }
 
+
 var hacking_background_LHS_content = "";
 var lhs_pos = 0;
 function step_hacking_background_LHS(progress) {
 	var height = Math.round(screenRectangle.offsetHeight * 0.92)
 	hackingBackgroundLHS.style.height = height + 'px';
 
-	var step = Math.round(100 * progress * Math.random());
+	var step = Math.round(200 * progress * Math.random());
 	hacking_background_LHS_content += LHS_hacking_content_text.slice(lhs_pos, lhs_pos + step);
 	lhs_pos = (lhs_pos + step) % LHS_hacking_content_text.length;
 
@@ -129,5 +133,27 @@ function step_hacking_style(progress) {
 	           Math.round(t*0x44 + s*0x00)];
 		screen_object.style.color = 'rgba(' + rgb.join(',') + ', 1.0)';
 	}
+}
 
+
+var hacking_verb_index = 0;
+function step_hacking_progress_bar(progress) {
+	const middle_len = 18;
+	var middle = hacking_verbs[hacking_verb_index] + '...';
+	while (middle.length + 1 < middle_len) middle = " " + middle + " ";
+	if (middle.length < middle_len) middle = middle + ' ';
+	middle = '|' + middle + '|';
+
+	var half_length = Math.round(screenRectangle.offsetWidth / 40);
+	var bar_len = Math.round(half_length * 2 * progress);
+	var pad_len = 2 * half_length - bar_len;
+	var fill = '[' + "█".repeat(bar_len) + "-".repeat(pad_len) + ']';
+	fill = fill.substring(0, half_length) + middle + fill.substring(half_length);
+	console.log(fill);
+
+	hackingProgressBar.innerHTML = fill;
+
+	if (Math.random() * 2 < progress) {
+		hacking_verb_index = (hacking_verb_index + 1) % hacking_verbs.length;
+	}
 }
