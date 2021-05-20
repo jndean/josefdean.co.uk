@@ -13,7 +13,8 @@ document.body.onkeydown = function () {
 
     // Move splash for login sequence
     splash_screen.innerHTML = splash_text;
-    splash_screen.style.padding = '2vh';
+    splash_screen.style.padding = '0';
+    splash_screen.style.margin = '0';
 
     /*var doc = document.documentElement
         if (doc.requestFullscreen) {

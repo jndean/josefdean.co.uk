@@ -9,7 +9,7 @@ function debug_straight_to_hacking() {
 	loginPage.parentNode.removeChild(loginPage);
 	hacking_intro();
 }
-debug_straight_to_hacking();
+// debug_straight_to_hacking();
 
 
 function hacking_intro() {
@@ -35,17 +35,20 @@ function hacking_main() {
 	document.body.addEventListener("keydown", hacking_keydown);
 
     step_hacking_progress_bar(0);
+    // step_hacking_foreground(0);
 
+    hacking_cursor.style.display = "block";
 	hacking_cursor_interval = setInterval(() => {
 		hacking_cursor_state = !hacking_cursor_state;
-		if (hacking_cursor_state) hacking_cursor.style.display = "block";
-		else                      hacking_cursor.style.display = "none";
+		if (hacking_cursor_state) hacking_cursor.style.opacity = "1";
+		else                      hacking_cursor.style.opacity = "0";
 	}, 500)
 }
 
 
 var hacking_pos = 0;
 const total_hacking_keystrokes = 200;
+var hacking_stats_box = new hackingStatsBoxState();
 function hacking_keydown(e) {
 	hacking_pos++;
 	var progress = hacking_pos / total_hacking_keystrokes;
@@ -54,6 +57,7 @@ function hacking_keydown(e) {
 	step_hacking_background_RHS(progress);
 	step_hacking_progress_bar(progress);
 	step_hacking_style(progress);
+	hacking_stats_box.step(progress);
 
 	if (hacking_cursor_interval != null) {
 		clearInterval(hacking_cursor_interval);
@@ -69,9 +73,10 @@ function step_hacking_foreground(progress) {
 	hacking_foreground_content += hacking_main_text.slice(hacking_foreground_pos, hacking_foreground_pos + step);
 	hacking_foreground_pos += step;
 
-	var numLines = Math.floor(0.77 * screenRectangle.offsetHeight / 20);
+	var numLines = Math.floor(0.76 * screenRectangle.offsetHeight / 20);
 	var lines = hacking_foreground_content.split('\n');
 	while (lines.length > numLines) lines.shift();
+	// while (lines.length < numLines) lines.unshift('');
 	hacking_foreground_content = lines.join('\n');
 	hackingForegroundBox.innerHTML = hacking_foreground_content + '█';
 	hacking_cursor.style.display = "block";
@@ -82,7 +87,7 @@ var hacking_background_RHS_content = "";
 var rhs_pos = 0;
 function step_hacking_background_RHS(progress) {
 	var height = Math.round(screenRectangle.offsetHeight * 0.92)
-	hackingBackgroundRHS.style.height = height + 'px';
+	//hackingBackgroundRHS.style.height = height + 'px';
 
 	var step = Math.round(200 * progress * Math.random());
 	hacking_background_RHS_content += RHS_hacking_content_text.slice(rhs_pos, rhs_pos + step);
@@ -91,6 +96,7 @@ function step_hacking_background_RHS(progress) {
 	var numLines = Math.floor(0.77 * screenRectangle.offsetHeight / 15);
 	var lines = hacking_background_RHS_content.split('\n');
 	while (lines.length > numLines) lines.shift();
+	while (lines.length < numLines) lines.unshift('');
 	hacking_background_RHS_content = lines.join('\n');
 	hackingBackgroundRHS.innerHTML = hacking_background_RHS_content + '█';
 }
@@ -100,19 +106,20 @@ var hacking_background_LHS_content = "";
 var lhs_pos = 0;
 function step_hacking_background_LHS(progress) {
 	var height = Math.round(screenRectangle.offsetHeight * 0.92)
-	hackingBackgroundLHS.style.height = height + 'px';
+	//hackingBackgroundLHS.style.height = height + 'px';
 
-	var step = Math.round(200 * progress * Math.random());
+	var step = Math.round(500 * progress * Math.random());
 	hacking_background_LHS_content += LHS_hacking_content_text.slice(lhs_pos, lhs_pos + step);
 	lhs_pos = (lhs_pos + step) % LHS_hacking_content_text.length;
 
 	var numLines = Math.floor(0.77 * screenRectangle.offsetHeight / 15);
 	var lines = hacking_background_LHS_content.split('\n');
 	while (lines.length > numLines) lines.shift();
-	while (lines.length < numLines) lines.unshift('');
+	// while (lines.length < numLines) lines.unshift('');
 	hacking_background_LHS_content = lines.join('\n');
 	hackingBackgroundLHS.innerHTML = hacking_background_LHS_content + '█';
 }
+
 
 
 var screen_object = document.getElementsByClassName("screen")[0];
@@ -149,11 +156,35 @@ function step_hacking_progress_bar(progress) {
 	var pad_len = 2 * half_length - bar_len;
 	var fill = '[' + "█".repeat(bar_len) + "-".repeat(pad_len) + ']';
 	fill = fill.substring(0, half_length) + middle + fill.substring(half_length);
-	console.log(fill);
-
 	hackingProgressBar.innerHTML = fill;
 
 	if (Math.random() * 2 < progress) {
 		hacking_verb_index = (hacking_verb_index + 1) % hacking_verbs.length;
+	}
+}
+
+
+function hackingStatsBoxState() {
+
+	this.CPU = 0;
+	this.GPU = 0;
+	this.RAM = 0;
+
+	this.step = function(progress) {
+		if (Math.random() < 0.1)
+			this.CPU = Math.max(0, Math.round(2 * 100 * progress + 40 * (Math.random() - 0.5)));
+		if (Math.random() < 0.3)
+			this.RAM = Math.round(127 * progress);
+		if (Math.random() < 0.3)
+			this.GPU = Math.round(100 - 10 * Math.random());
+		var CPU = (this.CPU + '%').padEnd(4);
+		var RAM = (this.RAM + 'G').padEnd(4);
+		var GPU = (this.GPU + '%').padEnd(4);
+
+		var content = '\
+		CPU: ' + CPU + ' RAM: ' + RAM + ' |\n\
+		GPU: ' + GPU + ' TPU: NaN  |';
+
+		hackingStatsBox.innerHTML = content;
 	}
 }

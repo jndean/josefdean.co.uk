@@ -115,6 +115,15 @@ const hacking_verbs = [
     'Apologising',
     'Satirising',
     'Regenerating',
+    'Automating',
+    'Defragmenting',
+    'Decrypting',
+    'Bit-banging',
+    'Unpacking',
+    'Installing',
+    'Patching',
+    'Configuring',
+    'Scrambling'
 ];
 
 
