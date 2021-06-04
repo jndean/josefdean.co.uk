@@ -14,7 +14,8 @@ function sound(src, vol=1) {
 }
 
 var blip_sound = new sound('res/blip.mp3', 0.05);
-var fail_sound = new sound('res/fail.mp3', 0.05);
+var fail_sound = new sound('res/fail.mp3', 0.1);
+var access_sound = new sound('res/access.mp3', 0.1);
 
 
 

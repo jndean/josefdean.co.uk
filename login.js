@@ -1,7 +1,7 @@
 
 var login_text_box = document.getElementById("loginText");
 var splash_screen = document.getElementById("splashScreen");
-splash_screen.innerHTML = splash_text + "[PRESS ANY KEY TO BEGIN]";
+splash_screen.innerHTML = splash_text + "\n[PRESS ANY KEY TO BEGIN]";
 
 
 var agent = null;
@@ -72,9 +72,9 @@ function open_denied_popup() {
 	setTimeout(() => {
 		login_page.parentNode.removeChild(login_page);
 
-		var denied_page = document.getElementById("deniedPage");
+		var denied_page = document.getElementById("messagePage");
 		denied_page.style.display = "block";
-		var denied_popup = document.getElementById("deniedPopup");
+		var denied_popup = document.getElementById("messagePopup");
 		denied_popup.innerHTML = denied_popup_text;	
 		denied_page.classList.add("transistionFrame");
 
@@ -113,7 +113,7 @@ function close_denied_page() {
 	        agent.parentNode.removeChild(agent);	
 	        agent = null;
 
-	    	deniedPage.classList.add("transistionFrame");
+	    	messagePage.classList.add("transistionFrame");
 	        setTimeout(hacking_intro, 80);
 	    }, 200);
 	}, 2000)

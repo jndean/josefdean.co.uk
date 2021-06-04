@@ -13,7 +13,8 @@ function debug_straight_to_hacking() {
 
 
 function hacking_intro() {
-	deniedPage.parentNode.removeChild(deniedPage);
+	messagePage.style.display = "none";
+	messagePage.classList.remove("transistionFrame");
     hackingPage.style.display = "block";
     animate_typing(
         hackingForegroundBox,
@@ -35,7 +36,6 @@ function hacking_main() {
 	document.body.addEventListener("keydown", hacking_keydown);
 
     step_hacking_progress_bar(0);
-    // step_hacking_foreground(0);
 
     hacking_cursor.style.display = "block";
 	hacking_cursor_interval = setInterval(() => {
@@ -52,6 +52,15 @@ var hacking_stats_box = new hackingStatsBoxState();
 function hacking_keydown(e) {
 	hacking_pos++;
 	var progress = hacking_pos / total_hacking_keystrokes;
+
+	// Press enter to finish
+	if (progress > 1 && e.keyCode == 13) {
+		document.body.removeEventListener("keydown", hacking_keydown);
+		clear_hacking();
+		show_access_granted();
+		return;
+	}
+
 	step_hacking_foreground(progress);
 	step_hacking_background_LHS(progress);
 	step_hacking_background_RHS(progress);
@@ -64,19 +73,21 @@ function hacking_keydown(e) {
 		hacking_cursor_interval = null;
 		hackingCursor.parentNode.removeChild(hackingCursor);
 	}
+
 }
 
+hacking_main_text += "\n" + LHS_hacking_content_text;
 var hacking_foreground_pos = 0;
 var hacking_foreground_content = hacking_startup_text_1 + hacking_startup_text_2;
 function step_hacking_foreground(progress) {
-	var step = Math.round(5 + 30 * progress * Math.random());
+
+	var step = Math.round(1 + 60 * progress * Math.random());
 	hacking_foreground_content += hacking_main_text.slice(hacking_foreground_pos, hacking_foreground_pos + step);
 	hacking_foreground_pos += step;
 
 	var numLines = Math.floor(0.76 * screenRectangle.offsetHeight / 20);
 	var lines = hacking_foreground_content.split('\n');
 	while (lines.length > numLines) lines.shift();
-	// while (lines.length < numLines) lines.unshift('');
 	hacking_foreground_content = lines.join('\n');
 	hackingForegroundBox.innerHTML = hacking_foreground_content + '█';
 	hacking_cursor.style.display = "block";
@@ -87,7 +98,6 @@ var hacking_background_RHS_content = "";
 var rhs_pos = 0;
 function step_hacking_background_RHS(progress) {
 	var height = Math.round(screenRectangle.offsetHeight * 0.92)
-	//hackingBackgroundRHS.style.height = height + 'px';
 
 	var step = Math.round(200 * progress * Math.random());
 	hacking_background_RHS_content += RHS_hacking_content_text.slice(rhs_pos, rhs_pos + step);
@@ -106,7 +116,6 @@ var hacking_background_LHS_content = "";
 var lhs_pos = 0;
 function step_hacking_background_LHS(progress) {
 	var height = Math.round(screenRectangle.offsetHeight * 0.92)
-	//hackingBackgroundLHS.style.height = height + 'px';
 
 	var step = Math.round(500 * progress * Math.random());
 	hacking_background_LHS_content += LHS_hacking_content_text.slice(lhs_pos, lhs_pos + step);
@@ -115,7 +124,6 @@ function step_hacking_background_LHS(progress) {
 	var numLines = Math.floor(0.77 * screenRectangle.offsetHeight / 15);
 	var lines = hacking_background_LHS_content.split('\n');
 	while (lines.length > numLines) lines.shift();
-	// while (lines.length < numLines) lines.unshift('');
 	hacking_background_LHS_content = lines.join('\n');
 	hackingBackgroundLHS.innerHTML = hacking_background_LHS_content + '█';
 }
@@ -140,11 +148,23 @@ function step_hacking_style(progress) {
 	           Math.round(t*0x44 + s*0x00)];
 		screen_object.style.color = 'rgba(' + rgb.join(',') + ', 1.0)';
 	}
+
+	if (0.5 < progress && progress < 0.8) {
+		hackingPage.style.animation = "hacking-skew1 1.5s infinite";
+	}
+	if (0.8 < progress) {
+		hackingPage.style.animation = "hacking-skew2 1s infinite";
+	}
 }
 
 
 var hacking_verb_index = 0;
 function step_hacking_progress_bar(progress) {
+	if (progress >= 1) {
+		hackingProgressBar.innerHTML = '<center><font size=22 style="text-shadow: -6px 0px 4px rgba(0,30,180,0.75)">SUCCESS - press ENTER to launch</font></center>';
+		return;
+	}
+
 	const middle_len = 18;
 	var middle = hacking_verbs[hacking_verb_index] + '...';
 	while (middle.length + 1 < middle_len) middle = " " + middle + " ";
@@ -169,6 +189,8 @@ function hackingStatsBoxState() {
 	this.CPU = 0;
 	this.GPU = 0;
 	this.RAM = 0;
+	this.SWAP = 0;
+	this.HTML = 0;
 
 	this.step = function(progress) {
 		if (Math.random() < 0.1)
@@ -176,15 +198,57 @@ function hackingStatsBoxState() {
 		if (Math.random() < 0.3)
 			this.RAM = Math.round(127 * progress);
 		if (Math.random() < 0.3)
+			this.SWAP = Math.round(64 * progress);
+		if (Math.random() < 0.3)
 			this.GPU = Math.round(100 - 10 * Math.random());
+		this.HTML = Math.round(6 * progress);
+
 		var CPU = (this.CPU + '%').padEnd(4);
 		var RAM = (this.RAM + 'G').padEnd(4);
+		var SWAP = (this.SWAP + 'T').padEnd(4);
 		var GPU = (this.GPU + '%').padEnd(4);
+		var HTML = ('V' + this.HTML).padEnd(4);
 
 		var content = '\
 		CPU: ' + CPU + ' RAM: ' + RAM + ' |\n\
 		GPU: ' + GPU + ' TPU: NaN  |';
 
+		content = "\
+		CPU : " + CPU + "\n\
+		RAM : " + RAM + "\n\
+		SWAP: " + SWAP + "\n\
+		GPU : " + GPU + "\n\
+		TPU : NaN \n\
+		HTML: " + HTML;
+
 		hackingStatsBox.innerHTML = content;
 	}
 }
+
+
+function clear_hacking() {
+	hackingPage.parentNode.removeChild(hackingPage);
+	screen_object.style.backgroundImage = 'radial-gradient(rgba(0, 75, 35, 1.0), black 150%';
+	screen_object.style.color = '#44ff44';
+}
+
+
+function show_access_granted() {
+	messagePopup.innerHTML = access_granted_popup_text;
+	messagePage.style.display = "block";
+	messagePopup.style.animation = "jitterShadow";
+	messagePage.classList.add("transistionFrame");
+	access_sound.play();
+
+	setTimeout(() => messagePage.classList.remove("transistionFrame"), 50);
+
+	setTimeout(() => {
+		messagePage.classList.add("transistionFrame");
+		setTimeout(() => {
+			messagePage.classList.remove("transistionFrame");
+			messagePage.style.display = "none";
+			openHomePage();
+		}, 50);
+	}, 2500);
+}
+
