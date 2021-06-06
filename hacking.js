@@ -50,14 +50,15 @@ var hacking_pos = 0;
 const total_hacking_keystrokes = 200;
 var hacking_stats_box = new hackingStatsBoxState();
 function hacking_keydown(e) {
+	console.log(e.keyCode);
 	hacking_pos++;
 	var progress = hacking_pos / total_hacking_keystrokes;
 
 	// Press enter to finish
 	if (progress > 1 && e.keyCode == 13) {
 		document.body.removeEventListener("keydown", hacking_keydown);
-		clear_hacking();
-		show_access_granted();
+		clear_hacking_page();
+		show_access_granted_page();
 		return;
 	}
 
@@ -226,14 +227,14 @@ function hackingStatsBoxState() {
 }
 
 
-function clear_hacking() {
+function clear_hacking_page() {
 	hackingPage.parentNode.removeChild(hackingPage);
 	screen_object.style.backgroundImage = 'radial-gradient(rgba(0, 75, 35, 1.0), black 150%';
 	screen_object.style.color = '#44ff44';
 }
 
 
-function show_access_granted() {
+function show_access_granted_page() {
 	messagePopup.innerHTML = access_granted_popup_text;
 	messagePage.style.display = "block";
 	messagePopup.style.animation = "jitterShadow";

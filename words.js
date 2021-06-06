@@ -88,8 +88,37 @@ const homepage_header_text = "\n\
 ██   ██║██║   ██║╚════██║██╔══╝  ██╔══╝  ██║  ██║██╔══╝  ██╔══██║██║╚██╗██║\n\
 ╚█████╔╝╚██████╔╝███████║███████╗██║     ██████╔╝███████╗██║  ██║██║ ╚████║\n\
        ╚════╝  ╚═════╝ ╚══════╝╚══════╝╚═╝     ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝.co.uk\n\n\
-SITEMAP\n\
-Use Number Keys\n";
+SITEMAP\n";
+
+const homepage_home_text = "\n\
+<u>HOME</u>\n\n\n\
+Welcome to JosefDean.co.uk!\n\n\
+Use the arrow keys [←][→] or number keys [1][2][3][4][5] to navigate.\n"
+
+const homepage_about_text = "\n\
+<u>ABOUT</u>\n\n\
+Why did I make this?\n";
+
+const homepage_contact_text = "\n\
+<u>CONTACT</u>\n\n\
+URLb64(rotate_1(xor_FE(msg)))zcnPy0lfSsjGzUxNzc9IaM7IaMXKet9ITW9IyMRvTMhGb8bIyc1FS\n\
+8tIzG_OyMlHSc1FzUnDb03LTEzNRs1IRWh6W8hFb0XIz8ZFb87PSG9OxUZIaG9dyG9IyEVvR0nPzs1vyEZ\n\
+vyEfNRs9FzW_DyMVGb1XIz8ZFzUZvSM3PRm_IRm9OzUnIxHrOxUZFz8tIxmlvyEZvz0jDb8hFS81Gb87Iy\n\
+U7FxkXLTknNb8nPRc1Gy89JaHpdyG9IyEVvSc3PRM1vw8jFRm9VyM_GRc1Gb8VIz0VFzUhNzU1vxEvNSG_\n\
+LRW_Lxm9OzctIzG_Fxs1NaHrfScTPw8ZvzUjGxUbNb0VLz0VvRUvNb05Gzc9Nb0zLRcZvzc_Gy0nDb8tIR\n\
+chvRUvNb8ZJyEXGaW9FyEZIb8hGb81DRUbPekVLy87Kb8ZJy87Nxm_Oz0hvzs_Fxs1vw8jFRm9FyM_GRc1\n\
+Gb0XIb0rPyWh630nEz8PGb0nLTEVvw8jFRm9FyM_GRc1Gb0xGyMlvxUhNzUZIzc9FS2lvTchvSMhFb0dJz\n\
+87Nb8PIxUZvTMtIzM1GxnrLSMbLTc1vyEZvSM3PRm9FS81vTkbNz01vxknIRcZob95Jzc9Ib0VLzW_ORsX\n\
+JTm9FRs_Db0bNzMVJz0ZJw2J63kbFyU7Gb87PSG_GycjKzW_IRm9OxUZIaA";
+
+const homepage_exploit_generator_text = "\n\
+<u>EXPLOIT GENERATOR</u>\n\n\
+Retro-punk hacking is a subtle art, and finding new inspiration can be tricky!\n\
+Press ENTER to generate an attack suggestion.\n";
+
+const homepage_hackerman_text = "\n\
+<u>HACKERMAN</u>\n\n\
+Press ENTER to launch hackerman.exe in practice mode\n";
 
 
 var hacking_main_text = "\

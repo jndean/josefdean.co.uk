@@ -47,7 +47,7 @@ function login_loop() {
 			login_text_box.innerHTML += password;
 	animate_typing(
 		login_text_box, 
-		"\n<b><font color=\"ff222\">Error: </font></b> Authentication failed, try again...\n> Enter username: ",
+		"\n<b><font color=\"ff222\">Error: </font></b> Authentication failed, you can do better than that...\n> Enter username: ",
 		() => connectToInput(loginInput, input_filter, (username) => {
 			login_text_box.innerHTML += username;
 	animate_typing(
