@@ -4,10 +4,10 @@ var current_home_page = 0;
 const homepages = [
 	['Home', homepage_home_text],
 	['About', homepage_about_text],
-	['Contact', homepage_contact_text],
 	['Exploit Generator', homepage_exploit_generator_text],
 	['Hackerman', homepage_hackerman_text],
-]
+	['Contact', homepage_contact_text],
+];
 
 
 function debug_straight_to_homepage() {
@@ -20,8 +20,8 @@ function debug_straight_to_homepage() {
 
 function openHomePage() {
 	homePage.style.display = "block";
-	homepageBody.innerHTML = homepages[current_home_page][1];
 	generate_homepage_header();
+	homepage_keydown(key=0);
 
 	document.body.addEventListener("keydown", homepage_keydown);
 }
@@ -40,19 +40,44 @@ function generate_homepage_header() {
 }
 
 
-function homepage_keydown(e) {
-	if (e.keyCode == 37) {
+function homepage_keydown(e=null, key=null) {
+	if (e !== null && key === null) 
+		key = e.keyCode;
+
+	if (key == 37) {
 		current_home_page = (current_home_page - 1 + homepages.length) % homepages.length;
-	} else if (e.keyCode == 39) {
+	} else if (key == 39) {
 		current_home_page = (current_home_page + 1 + homepages.length) % homepages.length;
-	} else if (e.keyCode >= 49 && e.keyCode <= 53) {
-		current_home_page = e.keyCode - 49;
+	} else if (key >= 49 && key <= 53) {
+		current_home_page = key - 49;
 	}
 	homepageBody.innerHTML = homepages[current_home_page][1];
 	generate_homepage_header();
 
-	// switch(current_home_page) {
-	// 	case 1:
-	// }
+	if (key == 13) {
+		if (homepages[current_home_page][0] == 'Exploit Generator') {
+			homepageBody.innerHTML = homepages[current_home_page][1] + '\n\n' + randomHackingText();
+		} else if (homepages[current_home_page][0] == 'Hackerman') {
+			homepageBody.innerHTML = homepages[current_home_page][1] + '\n\n' + 'This feature is still under construction, sorry...';
+		}
+	}
+}
 
+
+var current_verbs = [], current_nouns = [], current_locations = [], current_comments = [];
+function randomHackingText() {
+  if (current_verbs.length == 0)
+    current_verbs = shuffle(exploit_verbs.slice());
+  if (current_nouns.length == 0)
+    current_nouns = shuffle(exploit_nouns.slice());
+  if (current_locations.length == 0)
+    current_locations = shuffle(exploit_locations.slice());
+  if (current_comments.length == 0)
+    current_comments = shuffle(exploit_comments.slice());
+  return [
+    current_verbs.pop(),
+    current_nouns.pop(),
+    current_locations.pop() + '.\n',
+    current_comments.pop(),
+  ].join(' ');
 }

@@ -63,6 +63,31 @@ Virtualising modchip to bypass the BIOS\n\
 Play your keyboard like a piano until you're in the mainframe\n\
 Two hands required, dual keyboards optional\n";
 
+const hacking_verbs = [
+    'Ready',
+    'Downloading',
+    'Cross-compiling',
+    'Bootstraping',
+    'Side-loading',
+    'Virtualising',
+    'Injecting',
+    'Emulating',
+    'Escalating',
+    'Uploading',
+    'Spoofing',
+    'Apologising',
+    'Satirising',
+    'Regenerating',
+    'Automating',
+    'Defragmenting',
+    'Decrypting',
+    'Bit-banging',
+    'Unpacking',
+    'Installing',
+    'Patching',
+    'Configuring',
+    'Scrambling'
+];
 
 const access_granted_popup_text = "\n\n\n\n\n\n\
      █████╗  ██████╗ ██████╗███████╗███████╗███████╗        \n\
@@ -91,16 +116,18 @@ const homepage_header_text = "\n\
 SITEMAP\n";
 
 const homepage_home_text = "\n\
-<u>HOME</u>\n\n\n\
+HOME\n\n\n\
 Welcome to JosefDean.co.uk!\n\n\
 Use the arrow keys [←][→] or number keys [1][2][3][4][5] to navigate.\n"
 
 const homepage_about_text = "\n\
-<u>ABOUT</u>\n\n\
-Why did I make this?\n";
+ABOUT\n\n\
+This domain was sitting mostly unused between projects, so I made something more\n\
+interesting to fill the space during down time. It is mostly recycled code from\n\
+a browser-based I made - see github.com/jndean/exfiltrate.\n";
 
 const homepage_contact_text = "\n\
-<u>CONTACT</u>\n\n\
+CONTACT\n\n\
 URLb64(rotate_1(xor_FE(msg)))zcnPy0lfSsjGzUxNzc9IaM7IaMXKet9ITW9IyMRvTMhGb8bIyc1FS\n\
 8tIzG_OyMlHSc1FzUnDb03LTEzNRs1IRWh6W8hFb0XIz8ZFb87PSG9OxUZIaG9dyG9IyEVvR0nPzs1vyEZ\n\
 vyEfNRs9FzW_DyMVGb1XIz8ZFzUZvSM3PRm_IRm9OzUnIxHrOxUZFz8tIxmlvyEZvz0jDb8hFS81Gb87Iy\n\
@@ -112,13 +139,77 @@ Gb0XIb0rPyWh630nEz8PGb0nLTEVvw8jFRm9FyM_GRc1Gb0xGyMlvxUhNzUZIzc9FS2lvTchvSMhFb0d
 JTm9FRs_Db0bNzMVJz0ZJw2J63kbFyU7Gb87PSG_GycjKzW_IRm9OxUZIaA";
 
 const homepage_exploit_generator_text = "\n\
-<u>EXPLOIT GENERATOR</u>\n\n\
-Retro-punk hacking is a subtle art, and finding new inspiration can be tricky!\n\
-Press ENTER to generate an attack suggestion.\n";
+EXPLOIT GENERATOR\n\n\
+Retro-punk hacking is an artistic pursuit, and finding new inspiration can be tricky!\n\
+Press ENTER to generate attack suggestions.\n";
 
 const homepage_hackerman_text = "\n\
-<u>HACKERMAN</u>\n\n\
+HACKERMAN\n\n\
 Press ENTER to launch hackerman.exe in practice mode\n";
+
+
+const exploit_verbs = [
+    'Download',
+    'Inject',
+    'Bootstrap',
+    'Escalate',
+    'Spoof',
+    'Upload',
+    'Side-load',
+    'Cross-compile',
+    'Virtualise',
+    'Emulate',
+    'Bit-bang',
+    'Patch'
+];
+const exploit_nouns = [
+    'a rootkit',
+    'a key logger',
+    'a packet sniffer',
+    'a buffer overflow',
+    'a ROP chain',
+    'a zero-day',
+    'a backdoor',
+    'a modchip',
+    'illegal hex codes',
+    'impossible binary values',
+    'a virtual machine',
+    'a cracked copy of MS paint',
+    'a botnet',
+    'the konami code',
+    'more RAM',
+    'blue shellcode'
+];
+const exploit_locations = [
+    'in the BIOS',
+    'on the mainframe',
+    'in system32',
+    'in the blockchain',
+    'into the source code',
+    'through the PCIe slots',
+    'through the encryption',
+    'behind the firewall',
+    'from stackoverflow',
+    'from the dark cloud',
+    'into the wifi',
+    'into /dev/null',
+    'with a genetic algorithm',
+    'in the space between address spaces',
+    'through a side channel'
+];
+const exploit_comments = [
+		'They\'ll never see it coming.',
+    'It might buy you some cycles.',
+    'The modem should be able to take it.',
+    'Classic.',
+    'Don\'t forget Y2K!',
+    'Close your eyes for style points.',
+    'It doesn\'t really make sense, but who\'s checking?',
+    'It\'s an older move but it checks out.',
+    'It\'s a UNIX thing.',
+    'You can\'t start a revolution without smashing some stacks.',
+    '', '', '', '', '', '', '', '', ''
+];
 
 
 var hacking_main_text = "\
@@ -414,33 +505,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD dwReason, LPVOID lpReserved)\n\
 	}\n\
 	return bReturnValue;\n\
 }\n";
-
-
-const hacking_verbs = [
-    'Ready',
-    'Downloading',
-    'Cross-compiling',
-    'Bootstraping',
-    'Side-loading',
-    'Virtualising',
-    'Injecting',
-    'Emulating',
-    'Escalating',
-    'Uploading',
-    'Spoofing',
-    'Apologising',
-    'Satirising',
-    'Regenerating',
-    'Automating',
-    'Defragmenting',
-    'Decrypting',
-    'Bit-banging',
-    'Unpacking',
-    'Installing',
-    'Patching',
-    'Configuring',
-    'Scrambling'
-];
 
 
 var LHS_hacking_content_text = "\
