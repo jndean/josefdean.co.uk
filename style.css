@@ -135,7 +135,6 @@ body {
 
 #hackingPage {
   position: relative;
-  animation: jitterShadow 5.03s infinite;
   height: 95%;
   width: 100%;
   top: 0;
@@ -196,10 +195,6 @@ body {
   align-items: center;
   justify-content: center;
 }
-/*
-#homepageBody {
-  padding-left: 25vh;
-}*/
 
 
 @keyframes hacking-skew1 {

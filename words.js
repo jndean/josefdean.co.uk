@@ -40,7 +40,7 @@ const denied_popup_text = "\n\n\n\n\n<font color=red>\
       so it can be blacklisted: █                                   \n";
 
 
-const clippy_hello_text = "It looks like you're trying to compromise this domain, would you like me to launch hackerman.exe?";
+const clippy_hello_text = "It looks like you could use some help compromising this domain. Click me to launch hackerman.exe";
 
 
 const hacking_startup_text_1 = "\
@@ -116,15 +116,12 @@ const homepage_header_text = "\n\
 SITEMAP\n";
 
 const homepage_home_text = "\n\
-HOME\n\n\n\
-Welcome to JosefDean.co.uk!\n\n\
-Use the arrow keys [←][→] or number keys [1][2][3][4][5] to navigate.\n"
-
-const homepage_about_text = "\n\
-ABOUT\n\n\
+HOME\n\n\
+Welcome to JosefDean.co.uk, you're in the mainframe!\n\n\
 This domain was sitting mostly unused between projects, so I made something more\n\
 interesting to fill the space during down time. It is mostly recycled code from\n\
-a browser-based I made - see github.com/jndean/exfiltrate.\n";
+another project - see github.com/jndean/exfiltrate\n\n\
+Use the arrow keys [←][→] or number keys [1][2][3][4][5] to navigate.\n"
 
 const homepage_contact_text = "\n\
 CONTACT\n\n\
@@ -146,6 +143,10 @@ Press ENTER to generate attack suggestions.\n";
 const homepage_hackerman_text = "\n\
 HACKERMAN\n\n\
 Press ENTER to launch hackerman.exe in practice mode\n";
+
+const homepage_shutdown_text = "\n\
+SHUTDOWN\n\n\
+Press ENTER to shut down the mainframe.";
 
 
 const exploit_verbs = [

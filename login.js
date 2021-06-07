@@ -90,16 +90,18 @@ function spawn_clippy() {
 	agent.speak(clippy_hello_text);
 	agent.play('GetAttention');
 	setTimeout(() => {
-		document.body.addEventListener("keydown", close_denied_page);	
-		document.body.addEventListener("mousedown", close_denied_page);	
+		// document.body.addEventListener("mousedown", close_denied_page);	
+		document.getElementsByClassName("clippy")[0].onclick = close_denied_page;
+		document.getElementsByClassName("clippy-balloon")[0].onclick = close_denied_page;
 	}, 4000);
 	
 }
 
 
 function close_denied_page() {
-	document.body.removeEventListener("keydown", close_denied_page);
-	document.body.removeEventListener("mousedown", close_denied_page);
+	// document.body.removeEventListener("mousedown", close_denied_page);	
+	document.getElementsByClassName("clippy")[0].onclick = null;
+	document.getElementsByClassName("clippy-balloon")[0].onclick = null;
 	agent.stop();
 	agent.play('Congratulate');
     var balloon = document.getElementsByClassName('clippy-balloon')[0];
@@ -108,13 +110,21 @@ function close_denied_page() {
 	setTimeout(() => {
 	    agent.stop();
 	    agent.hide();
+
 	    setTimeout(() => {
 	        agent = document.getElementsByClassName('clippy')[0];
 	        agent.parentNode.removeChild(agent);	
 	        agent = null;
 
 	    	messagePage.classList.add("transistionFrame");
-	        setTimeout(hacking_intro, 80);
+
+	        setTimeout(() => {
+				messagePage.classList.remove("transistionFrame");
+				messagePage.style.display = "none";
+
+	        	hacking_intro();
+
+	        }, 80);
 	    }, 200);
 	}, 2000)
 }

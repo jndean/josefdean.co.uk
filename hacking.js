@@ -13,8 +13,6 @@ function debug_straight_to_hacking() {
 
 
 function hacking_intro() {
-	messagePage.style.display = "none";
-	messagePage.classList.remove("transistionFrame");
     hackingPage.style.display = "block";
     animate_typing(
         hackingForegroundBox,
@@ -224,11 +222,34 @@ function hackingStatsBoxState() {
 
 		hackingStatsBox.innerHTML = content;
 	}
+
+	this.reset = function() {
+		this.CPU = 0;
+		this.GPU = 0;
+		this.RAM = 0;
+		this.SWAP = 0;
+		this.HTML = 0;
+	}
 }
 
 
 function clear_hacking_page() {
-	hackingPage.parentNode.removeChild(hackingPage);
+	hackingPage.style.display = 'none';
+	hackingForegroundBox.innerHTML = '';
+	hackingBackgroundLHS.innerHTML = '';
+	hackingBackgroundRHS.innerHTML = '';
+	hackingProgressBar.innerHTML = '';
+	hackingStatsBox.innerHTML = '';
+	hacking_pos = 0;
+	rhs_pos = 0;
+	lhs_pos = 0;
+	hacking_verb_index = 0;
+	hacking_foreground_pos = 0;
+	hacking_foreground_content = hacking_startup_text_1 + hacking_startup_text_2;
+	hacking_background_RHS_content = '';
+	hacking_background_LHS_content = '';
+	hacking_stats_box.reset();
+    hackingPage.style.animation = "jitterShadow 5.03s infinite";
 	screen_object.style.backgroundImage = 'radial-gradient(rgba(0, 75, 35, 1.0), black 150%';
 	screen_object.style.color = '#44ff44';
 }

@@ -3,10 +3,10 @@ var current_home_page = 0;
 
 const homepages = [
 	['Home', homepage_home_text],
-	['About', homepage_about_text],
 	['Exploit Generator', homepage_exploit_generator_text],
 	['Hackerman', homepage_hackerman_text],
 	['Contact', homepage_contact_text],
+	['Shutdown', homepage_shutdown_text],
 ];
 
 
@@ -54,18 +54,25 @@ function homepage_keydown(e=null, key=null) {
 	homepageBody.innerHTML = homepages[current_home_page][1];
 	generate_homepage_header();
 
-	if (key == 13) {
-		if (homepages[current_home_page][0] == 'Exploit Generator') {
-			homepageBody.innerHTML = homepages[current_home_page][1] + '\n\n' + randomHackingText();
-		} else if (homepages[current_home_page][0] == 'Hackerman') {
-			homepageBody.innerHTML = homepages[current_home_page][1] + '\n\n' + 'This feature is still under construction, sorry...';
-		}
+	if (key == 13) { // ENTER pressed
+		switch (homepages[current_home_page][0]) {
+			case 'Exploit Generator':
+				homepageBody.innerHTML = '\nEXPLOIT GENERATOR\n\n' + random_hacking_text() + '\n\nPress ENTER to generate another suggestion';
+				break;
+			case 'Hackerman':
+				clear_home_page();
+				hacking_intro();
+				break;
+			case 'Shutdown':
+				homepageBody.innerHTML = homepages[current_home_page][1] + '\n\n' + 'This feature is still under construction, sorry...';
+				break;
+		}	
 	}
 }
 
 
 var current_verbs = [], current_nouns = [], current_locations = [], current_comments = [];
-function randomHackingText() {
+function random_hacking_text() {
   if (current_verbs.length == 0)
     current_verbs = shuffle(exploit_verbs.slice());
   if (current_nouns.length == 0)
@@ -80,4 +87,11 @@ function randomHackingText() {
     current_locations.pop() + '.\n',
     current_comments.pop(),
   ].join(' ');
+}
+
+
+
+function clear_home_page() {
+	homePage.style.display = "none";
+	document.body.removeEventListener("keydown", homepage_keydown);
 }
