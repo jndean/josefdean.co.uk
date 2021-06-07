@@ -64,7 +64,9 @@ function homepage_keydown(e=null, key=null) {
 				hacking_intro();
 				break;
 			case 'Shutdown':
-				homepageBody.innerHTML = homepages[current_home_page][1] + '\n\n' + 'This feature is still under construction, sorry...';
+				homepageBody.innerHTML = 'Goodbye';
+				screenRectangle.style.animation = 'turn-off 0.61s cubic-bezier(0.230, 1.000, 0.320, 1.000)';
+				setTimeout(() => {document.body.innerHTML = ''}, 570);
 				break;
 		}	
 	}

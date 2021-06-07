@@ -48,7 +48,6 @@ var hacking_pos = 0;
 const total_hacking_keystrokes = 200;
 var hacking_stats_box = new hackingStatsBoxState();
 function hacking_keydown(e) {
-	console.log(e.keyCode);
 	hacking_pos++;
 	var progress = hacking_pos / total_hacking_keystrokes;
 
