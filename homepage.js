@@ -64,6 +64,7 @@ function homepage_keydown(e=null, key=null) {
 				hacking_intro();
 				break;
 			case 'Shutdown':
+				document.body.removeEventListener("keydown", homepage_keydown);
 				homepageBody.innerHTML = 'Goodbye';
 				screenRectangle.style.animation = 'turn-off 0.61s cubic-bezier(0.230, 1.000, 0.320, 1.000)';
 				setTimeout(() => {document.body.innerHTML = ''}, 570);

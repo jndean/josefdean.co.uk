@@ -118,9 +118,7 @@ SITEMAP\n";
 const homepage_home_text = "\n\
 HOME\n\n\
 Welcome to JosefDean.co.uk, you're in the mainframe!\n\n\
-This domain was sitting mostly unused between projects, so I made something more\n\
-interesting to fill the space during down time. It is mostly recycled code from\n\
-another project - see github.com/jndean/exfiltrate\n\n\
+\n\n\
 Use the arrow keys [←][→] or number keys [1][2][3][4][5] to navigate.\n"
 
 const homepage_contact_text = "\n\

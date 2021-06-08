@@ -45,7 +45,7 @@ function hacking_main() {
 
 
 var hacking_pos = 0;
-const total_hacking_keystrokes = 200;
+const total_hacking_keystrokes = 250;
 var hacking_stats_box = new hackingStatsBoxState();
 function hacking_keydown(e) {
 	hacking_pos++;
@@ -78,6 +78,11 @@ hacking_main_text += "\n" + LHS_hacking_content_text;
 var hacking_foreground_pos = 0;
 var hacking_foreground_content = hacking_startup_text_1 + hacking_startup_text_2;
 function step_hacking_foreground(progress) {
+
+	if (progress >= 1.0) {
+		hackingForegroundBox.innerHTML = '<center style="padding-top: 30vh;"><font size=22>HACKING SUCCESS - press ENTER to launch</font></center>';
+		return;
+	}
 
 	var step = Math.round(1 + 60 * progress * Math.random());
 	hacking_foreground_content += hacking_main_text.slice(hacking_foreground_pos, hacking_foreground_pos + step);
@@ -159,7 +164,7 @@ function step_hacking_style(progress) {
 var hacking_verb_index = 0;
 function step_hacking_progress_bar(progress) {
 	if (progress >= 1) {
-		hackingProgressBar.innerHTML = '<center><font size=22 style="text-shadow: -6px 0px 4px rgba(0,30,180,0.75)">SUCCESS - press ENTER to launch</font></center>';
+		hackingProgressBar.innerHTML = '';// '<center><font size=22 style="text-shadow: -6px 0px 4px rgba(0,30,180,0.75)">SUCCESS - press ENTER to launch</font></center>';
 		return;
 	}
 
@@ -191,6 +196,11 @@ function hackingStatsBoxState() {
 	this.HTML = 0;
 
 	this.step = function(progress) {
+		if (progress >= 1.0) {
+			hackingStatsBox.innerHTML = '';
+			return;
+		}
+
 		if (Math.random() < 0.1)
 			this.CPU = Math.max(0, Math.round(2 * 100 * progress + 40 * (Math.random() - 0.5)));
 		if (Math.random() < 0.3)
